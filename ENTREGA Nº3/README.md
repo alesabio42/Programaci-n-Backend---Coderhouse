@@ -17,9 +17,9 @@ Este repositorio contiene una aplicación simple que implementa un servidor con 
 5. Observa la salida en la consola para verificar el éxito de las operaciones de prueba.
 
 6. Abre tu navegador o utiliza herramientas como Postman para realizar las siguientes pruebas:
+
 Para devolver todos los productos.
 http://localhost:8080/products
-
 
 Para devolver solo los primeros 5 productos.
 http://localhost:8080/products?limit=5
