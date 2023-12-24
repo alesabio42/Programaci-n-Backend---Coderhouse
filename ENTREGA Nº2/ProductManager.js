@@ -1,4 +1,5 @@
-const fs = require('fs');
+const fs = require('fs').promises;
+
 
 class ProductManager {
   constructor(filePath) {
@@ -10,7 +11,10 @@ class ProductManager {
     this.loadProducts();
   }
 
-  addProduct(title, description, price, thumbnail, code, stock) {
+  
+  async addProduct(productData) {
+    const { title, description, price, thumbnail, code, stock } = productData;
+
     if (!title || !description || !price || !thumbnail || !code || stock === undefined) {
       console.error("Todos los campos son obligatorios");
       return null;
@@ -36,11 +40,12 @@ class ProductManager {
     return product;
   }
 
-  getProducts() {
+  async getProducts() {
     return this.products;
   }
 
-  getProductById(id) {
+
+  async getProductById(id) {
     const product = this.products.find((product) => product.id === id);
 
     if (product) {
@@ -51,12 +56,13 @@ class ProductManager {
     }
   }
 
-  updateProduct(id, updatedFields) {
+
+  async updateProduct(id, updatedFields) {
     const index = this.products.findIndex((product) => product.id === id);
 
     if (index !== -1) {
       this.products[index] = { ...this.products[index], ...updatedFields };
-      this.saveProducts();
+      await this.saveProducts();
       return this.products[index];
     } else {
       console.error("Producto no encontrado");
@@ -64,20 +70,20 @@ class ProductManager {
     }
   }
 
-  deleteProduct(id) {
+  async deleteProduct(id) {
     const index = this.products.findIndex((product) => product.id === id);
 
     if (index !== -1) {
       this.products.splice(index, 1);
-      this.saveProducts();
+      await this.saveProducts();
     } else {
       console.error("Producto no encontrado");
     }
   }
 
-  loadProducts() {
+  async loadProducts() {
     try {
-      const data = fs.readFileSync(this.path, 'utf8');
+      const data = await fs.readFile(this.path, 'utf8');
       this.products = JSON.parse(data);
       this.nextProductId = Math.max(...this.products.map((product) => product.id), 0) + 1;
     } catch (error) {
@@ -85,10 +91,10 @@ class ProductManager {
     }
   }
 
-  saveProducts() {
+  async saveProducts() {
     try {
       const data = JSON.stringify(this.products, null, 2);
-      fs.writeFileSync(this.path, data, 'utf8');
+      await fs.writeFile(this.path, data, 'utf8');
     } catch (error) {
       console.error("Error al guardar el archivo de productos:", error.message);
     }
