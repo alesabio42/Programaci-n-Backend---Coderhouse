@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Utiliza el enrutador para manejar las rutas de productos
+
 function createProductsRouter(productManager) {
   // Ruta raíz GET para listar todos los productos
   router.get('/', async (req, res) => {
@@ -71,4 +72,4 @@ function createProductsRouter(productManager) {
   return router;
 }
 
-module.exports = { router: router, createProductsRouter: createProductsRouter };
+module.exports = createProductsRouter;

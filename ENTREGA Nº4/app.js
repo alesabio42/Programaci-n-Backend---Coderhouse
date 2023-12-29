@@ -1,7 +1,8 @@
 const express = require('express');
 const ProductManager = require('./ProductManager');
-const { router: productsRouter, createProductsRouter } = require('./api/products');
-const { router: cardsRouter, createCardsRouter, CardManager } = require('./api/cards');
+const CardManager = require('./CardManager');
+const createCardsRouter = require('./api/cards');
+const createProductsRouter = require('./api/products'); // Importa la función directamente
 
 const app = express();
 const port = 8080;
