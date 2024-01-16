@@ -11,7 +11,7 @@ function createProductsRouter(productManager) {
       res.json(products);
     } catch (error) {
       res.status(500).json({ error: 'Error al obtener los productos' });
-    }
+    }a
   });
 
   // Ruta GET /:pid para obtener un producto por su ID
