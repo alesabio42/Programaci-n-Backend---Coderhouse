@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-function createCardsRouter(cardManager) {
+function createCartsRouter(cartManager) {
   // Rutas para carritos
   router.post('/', async (req, res) => {
     try {
-      const newCard = await cardManager.createCard();
-      res.json(newCard);
+      const userId = req.body.userId;  // Asegúrate de tener un campo userId en la solicitud
+      const newCart = await cartManager.createCart(userId);
+      res.json(newCart);
     } catch (error) {
       res.status(500).json({ error: 'Error al crear el carrito' });
     }
@@ -14,11 +15,11 @@ function createCardsRouter(cardManager) {
 
   router.get('/:cid', async (req, res) => {
     try {
-      const cardId = parseInt(req.params.cid);
-      const card = await cardManager.getCardById(cardId);
+      const userId = req.params.cid;  // Cambiado de cardId a userId para que coincida con el campo en el modelo
+      const cart = await cartManager.getCartByUserId(userId);
 
-      if (card) {
-        res.json(card.products);
+      if (cart) {
+        res.json(cart.products);
       } else {
         res.status(404).json({ error: 'Carrito no encontrado' });
       }
@@ -29,14 +30,14 @@ function createCardsRouter(cardManager) {
 
   router.post('/:cid/product/:pid', async (req, res) => {
     try {
-      const cardId = parseInt(req.params.cid);
-      const productId = parseInt(req.params.pid);
+      const userId = req.params.cid;  // Cambiado de cardId a userId para que coincida con el campo en el modelo
+      const productId = req.params.pid;
       const quantity = req.body.quantity || 1;
 
-      const card = await cardManager.addProductToCard(cardId, productId, quantity);
+      const cart = await cartManager.addProductToCart(userId, productId, quantity);
 
-      if (card) {
-        res.json(card);
+      if (cart) {
+        res.json(cart);
       } else {
         res.status(404).json({ error: 'Carrito no encontrado' });
       }
@@ -48,4 +49,4 @@ function createCardsRouter(cardManager) {
   return router;
 }
 
-module.exports = createCardsRouter;
+module.exports = createCartsRouter;
