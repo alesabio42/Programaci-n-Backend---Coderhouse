@@ -9,5 +9,6 @@ En el marco de mi recorrido por el curso de Programación Backend realizado en C
 3. **ENTREGA 3 - Servidor con express:** Esta carpeta contiene una aplicación simple que implementa un servidor con Express y utiliza una clase ProductManager para gestionar productos con persistencia en un archivo JSON.
 4. **ENTREGA 4 - Primera pre-entrega Proyecto FiNAL:** Este es un backend simple para la gestión de productos y carritos utilizando Express y el sistema de archivos para persistencia.
 5. **ENTREGA 5 - Websockets + Handlebars:**
+6. **ENTREGA 6 - Práctica de integración sobre el ecommerce:** En esta entrega se se agrega el modelo de persistencia de Mongo y mongoose al proyecto.
 
 ¡Gracias por explorar mi repositorio! 
