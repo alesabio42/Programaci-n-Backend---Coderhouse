@@ -13,9 +13,10 @@ src
 │   │   └── MDB (mongodb)
 │   │       ├── CartManager.js
 │   │       └── ProductManager.js
+│   │       └── ChatManager.js
 │   ├── Models
 │       ├── carts.model.js
-│       ├── messages.model.js
+│       ├── chat.model.js
 │       └── products.model.js
 │
 ├── jsonDB
@@ -37,6 +38,7 @@ src
 ├── Routes
 │   ├── cards.js
 │   └── products.js
+│   └── chat.js
 └── Views
     ├── Layouts
     ├── chat.handlebars 

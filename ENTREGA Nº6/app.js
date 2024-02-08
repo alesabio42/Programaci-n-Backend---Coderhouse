@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const { Server: ServerIO } = require('socket.io');
 const { productModel } = require('./src/dao/models/products.model');
 const ProductManager = require('./src/dao/managers/MDB/ProductManager');
+const cors = require('cors');
+const Messages = require('./src/dao/models/chat.model')
 
 const app = express();
 const server = http.createServer(app);
@@ -35,15 +37,18 @@ app.use(
   helmet.contentSecurityPolicy({
     useDefaults: true,
     directives: {
-      "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "http://localhost:8080/", "https://cdn.socket.io/"],
-      "font-src": ["'self'", "http://localhost:8080/"],
+      "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://cdn.socket.io/"],
+      "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+      // ... otras directivas
     },
   })
 );
 
-// Middleware para parsear el cuerpo de las solicitudes en formato JSON
+// Middleware 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+
 
 // Configuración de Handlebars
 const hbs = exphbs.create({
@@ -59,7 +64,7 @@ app.engine('handlebars', hbs.engine);
 app.set('views', path.join(__dirname, 'src', 'views'));
 app.set('view engine', 'handlebars');
 
-// Rutas
+// Rutas principales u otras rutas
 app.get('/', (req, res) => {
   res.render('index');
 });
@@ -72,12 +77,21 @@ app.get('/realTimeProducts', (req, res) => {
   res.render('realTimeProducts', { products: productManager.products });
 });
 
+// Rutas del chat
+const chatRouter = require('./src/routes/chat');
+app.use('/chat', chatRouter);
+
+
+
+
+// Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'src', 'public')));
 
 // Socket del lado del servidor
 io.on('connection', async (socket) => {
   console.log('Cliente conectado');
 
+  // Lógica para productos
   // Obtener la lista de productos y enviarla al cliente cuando se conecta
   const productList = await productManager.getProducts();
   io.to(socket.id).emit('updateProducts', productList);
@@ -99,9 +113,31 @@ io.on('connection', async (socket) => {
     io.to(socket.id).emit('deleteProduct', result);
   });
 
+  // Lógica para mensajes
+  // Obtener mensajes existentes y enviarlos al cliente recién conectado
+  try {
+    const messages = await Messages.find(); // Usa Messages en lugar de ChatMessage
+    socket.emit('messages', messages);
+  } catch (error) {
+    console.error('Error al obtener mensajes existentes:', error.message);
+  }
 
+  // Manejar nuevo mensaje del chat
+  socket.on('chatMessage', async ({ user, message }) => {
+    try {
+      const newMessage = new message({ user, message });
+      await newMessage.save();
+      io.emit('message', newMessage); // Emitir el nuevo mensaje a todos los clientes
+    } catch (error) {
+      console.error('Error al guardar el mensaje en la base de datos:', error.message);
+    }
+  });
+
+  // Lógica para el carrito 
+  // AGREGAR DESPUES DIJO EL TUTOR
 
 });
+
 
 // Iniciar el servidor
 const port = 8080;
