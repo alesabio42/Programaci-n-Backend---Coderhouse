@@ -1,32 +1,33 @@
-// src/routes/chat.js
+// En el archivo chat.js
 const express = require('express');
 const router = express.Router();
-const ChatManager = require('../dao/managers/MDB/ChatManager');
-const Messages = require('../dao/models/chat.model'); // Asegúrate de tener la ruta correcta y el modelo Message definido
+const Messages = require('../dao/models/chat.model'); // Importa el modelo de mensajes
 
-// Crear instancia del gestor de chat
-const chatManager = new ChatManager();
-
+// Ruta GET para mostrar la vista del chat
 router.get('/', async (req, res) => {
   try {
-    const messages = await chatManager.getMessages(); // Usa getMessages en lugar de getChatMessages
+    // Obtener todos los mensajes (puedes ajustar esta lógica según tus necesidades)
+    const messages = await Messages.find({});
+
+    // Renderizar la vista 'chat.handlebars' y pasar los mensajes como contexto
     res.render('chat', { messages });
   } catch (error) {
-    console.error('Error al obtener mensajes del chat:', error.message);
-    res.status(500).send('Error interno del servidor');
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los mensajes' });
   }
 });
 
-// Enviar mensaje al chat
-router.post('/', async (req, res) => {
-  const { user, message } = req.body;
+// Ruta POST para agregar un nuevo mensaje
+router.post('/nchat', async (req, res) => {
   try {
-    // Guardar el nuevo mensaje utilizando el ChatManager o directamente el modelo Message
-    const newMessage = await Messages.create({ user, message });
-    res.status(201).send('Mensaje enviado correctamente');
+    const messageData = req.body;
+
+    // Crea un nuevo documento de mensaje en la base de datos
+    const newMessage = await Messages.create(messageData);
+
+    res.json(newMessage);
   } catch (error) {
-    console.error('Error al enviar mensaje:', error.message);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Error al agregar el mensaje' });
   }
 });
 

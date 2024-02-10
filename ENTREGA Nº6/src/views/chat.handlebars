@@ -1,3 +1,5 @@
+{{!-- RUTA DE ACCESO: src/views/chat.handlebars --}}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,7 +15,7 @@
   <h1>Chat en Tiempo Real</h1>
 
   <div id="chatMessages">
-    <!-- Aquí mostrar los mensajes del chat -->
+    <!-- Mostrar los mensajes del chat -->
     {{#each messages}}
       <p>{{this.user}}: {{this.message}}</p>
     {{/each}}

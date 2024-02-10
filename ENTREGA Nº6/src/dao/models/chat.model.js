@@ -1,4 +1,4 @@
-// chat.model.js
+// RUTA DE ACCESO: src/dao/models/chat.model.js
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
@@ -6,6 +6,7 @@ const messageSchema = new mongoose.Schema({
   message: String,
 });
 
-const Messages = mongoose.model('Messages', messageSchema);
+const Messages = mongoose.model('messages', messageSchema);
+
 
 module.exports = Messages; 
