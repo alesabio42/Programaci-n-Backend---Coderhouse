@@ -90,11 +90,50 @@ class ProductManager {
         return this.handleError("Error al eliminar el producto:", error);
     }
 }
+async getProducts({ limit = 10, page = 1 } = {}) {
+  try {
+    console.log("Options:", { limit, page });
 
+    const options = {
+      limit: parseInt(limit),
+      page: parseInt(page),
+      sort: { price: 1 },  // Asegúrate de que 'price' coincida con el nombre del campo en tu modelo
+    };
 
-  async getProducts() {
-    return await productModel.find();
+    const result = await productModel.paginate({}, options);
+
+    console.log("Result:", result);
+
+    return result;
+  } catch (error) {
+    console.error("Error al obtener los productos:", error.message);
+    return [];
   }
+}
+
+async getProductById(id) {
+  try {
+    const product = await productModel.findById(id);
+    return product;
+  } catch (error) {
+    console.error("Error al obtener el producto por ID:", error.message);
+    return null;
+  }
+}
+
+
+async getUniqueCategories() {
+  try {
+    const categories = await productModel.distinct('categoria');
+    console.log(categories); // Puedes dejar este console.log para verificar en la consola
+    return categories;
+  } catch (error) {
+    this.handleError("Error al obtener las categorías únicas:", error.message);
+    return [];
+  }
+}
+
+
 
   async loadProducts() {
     try {

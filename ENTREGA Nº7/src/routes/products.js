@@ -1,3 +1,4 @@
+// RUTA: src/routes/products.js
 const express = require('express');
 const router = express.Router();
 const ProductManager = require('../dao/managers/MDB/ProductManager');
@@ -9,14 +10,27 @@ const productManager = new ProductManager(productModel); // Pasa el modelo de pr
 // Ruta raíz GET para listar todos los productos
 router.get('/', async (req, res) => {
   try {
-    const products = await productModel.find({});
-    res.json(products);
+    const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await productModel.paginate({}, { limit: 50, page: 2, lean: true });
+
+    res.send({
+      status: 'success',
+      data: {
+        docs,
+        hasPrevPage,
+        hasNextPage,
+        prevPage,
+        nextPage,
+        page
+      }
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener los productos' });
+    console.log(error);
+    res.status(500).send({
+      status: 'error',
+      message: 'Error al obtener los documentos paginados'
+    });
   }
 });
-
 
 // Ruta GET /:pid para obtener un producto por su ID
 router.get('/:pid', async (req, res) => {
