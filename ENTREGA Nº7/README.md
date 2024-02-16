@@ -26,18 +26,20 @@ src
 │
 ├── public
 │       ├── css
-│         ├── products.css
+│         ├── cart.css
 │         ├── home.css
+│         ├── products.css
+│         └── realTimeChat.ccs
 │         └── realTimeProducts.ccs
+│         └── vistaproducts.ccs
 │
 │       ├── js
 │         ├── buttonHandlers.js
 │         └── home.js
 │         ├── index.js
-│         └── realTimeProducts.js
 │         └── realTimeChat.js
+│         └── realTimeProducts.js
 │         └── vistaproduct.js
-
 │
 ├── Routes
 │   ├── cards.js
@@ -49,9 +51,10 @@ src
     ├── chat.handlebars 
     ├── home.handlebars
     ├── index.handlebars
+    ├── products.handlebars 
     ├── realTimeProducts.handlebars
     ├── vistaproduct.handlebars 
-    ├── products.handlebars 
+
 app.js
 package-lock.json
 package.json
