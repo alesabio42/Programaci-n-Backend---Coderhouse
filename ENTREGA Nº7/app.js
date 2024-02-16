@@ -21,7 +21,7 @@ const CartManager = require('./src/dao/managers/MDB/CartManager');
 
 //------------------------------ROUTERS------------------------------
 const createCartsRouter = require('./src/routes/carts');
-const cartsRouter = createCartsRouter(new CartManager()); // Crea una instancia del CartManager y pásalo al router del carrito
+const cartsRouter = createCartsRouter(new CartManager());
 const chatRouter = require('./src/routes/chat');
 
 //------------------------------GESTOR------------------------------
@@ -61,7 +61,7 @@ app.use(
     directives: {
       "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://cdn.socket.io/"],
       "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
-      // ... otras directivas
+
     },
   })
 );
@@ -128,26 +128,65 @@ app.get('/products', async (req, res) => {
     res.status(500).json({ error: 'Error al obtener los productos' });
   }
 });
-
 app.post('/vistaproduct', async (req, res) => {
   try {
-    const productId = req.body.productId;
+      const productId = req.body.productId;
 
-    // Obtén el producto específico según el ID
-    const product = await productManager.getProductById(productId);
+      // Obtén el producto específico según el ID
+      const product = await productManager.getProductById(productId);
 
-    // Renderiza la vista con la información del producto
-    res.render('vistaproduct', { product });
+      // Verifica el stock del producto
+      console.log('Product details:', product);
+
+      // Renderiza la vista con la información del producto
+      res.render('vistaproduct', { product });
+
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener el producto' });
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener el producto' });
   }
 });
+
+app.post('/add-to-cart', async (req, res) => {
+  try {
+      const userId = 'userIdDummy'; // ojo el usuariooooooooooooo
+      const productId = req.body.productId;
+      const quantity = req.body.quantity;
+
+
+      const cart = await cartManager.addProductToCart(userId, productId, quantity);
+
+      // Devuelve una respuesta JSON indicando el éxito
+      res.json({ success: true });
+
+  } catch (error) {
+      console.error('Error al agregar el producto al carrito:', error);
+      res.status(500).json({ error: 'Error al agregar el producto al carrito' });
+  }
+});
+
+
+
 
 app.use('/chat', chatRouter);
 
 // Rutas del carrito
-app.use('/carts', cartsRouter);
+app.get('/cart', async (req, res) => {
+  try {
+      const userId = 'userIdDummy'; // Reemplazar esto con la forma adecuada de obtener el ID del usuario, todavia no implementamos login
+      const cartContent = await cartManager.getCartByUserId(userId);
+
+      if (cartContent) {
+          console.log('Cart Content:', cartContent);
+          res.render('cart', { cartContent });
+      } else {
+          res.status(500).json({ error: 'Error al cargar el carrito.' });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al cargar el carrito.' });
+  }
+});
 
 
 //  -----------------------------------------------------Servir archivos estáticos -------------------------------------------------
@@ -191,8 +230,8 @@ io.on('connection', async (socket) => {
 
   // Obtener mensajes existentes y enviarlos al cliente recién conectado
   try {
-    const messages = await Messages.find(); // Aquí cambié de 'chats' a 'messages'
-    socket.emit('messages', messages); // Aquí cambié de 'chats' a 'messages'
+    const messages = await Messages.find();
+    socket.emit('messages', messages);
   } catch (error) {
     console.error('Error al obtener mensajes existentes:', error.message);
   }
@@ -202,15 +241,13 @@ io.on('connection', async (socket) => {
     try {
       const newMessage = new Messages({ user, message });
       await newMessage.save();
-      io.emit('chat', newMessage); // Aquí cambié de 'chat' a 'messages'
+      io.emit('chat', newMessage);
     } catch (error) {
       console.error('Error al guardar el mensaje en la base de datos:', error.message);
     }
   
   });
 
-  // Lógica para el carrito 
-  // AGREGAR DESPUES DIJO EL TUTOR
 
 });
 

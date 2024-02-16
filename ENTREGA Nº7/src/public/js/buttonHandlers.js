@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnHome.addEventListener('click', function () {
         // Lógica para redirigir a la página Home
-        window.location.href = '/home';  // Ajusta la ruta según tu configuración
+        window.location.href = '/home';  
     });
 
     btnRealTimeProducts.addEventListener('click', function () {
         // Lógica para redirigir a la página Real Time Products
-        window.location.href = '/realTimeProducts';  // Ajusta la ruta según tu configuración
+        window.location.href = '/realTimeProducts'; 
     });
 });

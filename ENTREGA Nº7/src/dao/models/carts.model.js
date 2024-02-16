@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
+// RUTA DE ACCESO: src/dao/models/carts.model.js
 
-const cartsCollection = 'carts';
+const { Schema, model } = require('mongoose');
 
-const cartsSchema = new mongoose.Schema({
+const collection = 'carts';
+
+const cartsSchema = new Schema({
   userId: {
     type: String,
     required: true,
@@ -11,8 +13,8 @@ const cartsSchema = new mongoose.Schema({
   products: [
     {
       productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
+        type: Schema.Types.ObjectId,
+        ref: 'products',
         required: true,
       },
       quantity: {
@@ -27,7 +29,11 @@ const cartsSchema = new mongoose.Schema({
   },
 });
 
-const cartModel = mongoose.model(cartsCollection, cartsSchema);
+cartsSchema.pre('findOne', function () {
+  this.populate('products.productId');
+});
+
+const cartModel = model(collection, cartsSchema);
 
 module.exports = {
   cartModel,

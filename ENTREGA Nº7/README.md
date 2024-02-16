@@ -35,6 +35,9 @@ src
 │         └── home.js
 │         ├── index.js
 │         └── realTimeProducts.js
+│         └── realTimeChat.js
+│         └── vistaproduct.js
+
 │
 ├── Routes
 │   ├── cards.js
@@ -42,10 +45,13 @@ src
 │   └── chat.js
 └── Views
     ├── Layouts
+    ├── cart.handlebars     
     ├── chat.handlebars 
     ├── home.handlebars
     ├── index.handlebars
     ├── realTimeProducts.handlebars
+    ├── vistaproduct.handlebars 
+    ├── products.handlebars 
 app.js
 package-lock.json
 package.json

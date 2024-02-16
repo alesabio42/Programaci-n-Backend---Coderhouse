@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('btnGoToIndex').addEventListener('click', () => {
     // Redirigir a la página de index
-    window.location.href = '/';  // Ajusta la ruta según tu configuración
+    window.location.href = '/'; 
   });
 
   // Función para actualizar la lista de productos en la interfaz

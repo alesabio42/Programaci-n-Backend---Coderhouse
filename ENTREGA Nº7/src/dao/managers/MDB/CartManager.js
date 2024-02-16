@@ -1,6 +1,7 @@
 // RUTA RELATIVA: src/dao/managers/MDB/CartManager.js
 
 const { cartModel } = require('../../models/carts.model');  
+const { productModel } = require('../../models/products.model'); 
 const ProductManager = require('../MDB/ProductManager');  
 
 class CartManager {
@@ -8,12 +9,13 @@ class CartManager {
     this.productManager = new ProductManager();
   }
 
+//------------------------------------CREAR CARRITO------------------------------------//
   async createCart(userId) {
     try {
       const newCart = await cartModel.create({
         userId,
         products: [],
-        total: 0, // Agregamos el campo total al crear el carrito
+        total: 0, 
       });
       return newCart;
     } catch (error) {
@@ -22,16 +24,26 @@ class CartManager {
     }
   }
 
+//------------------------------------TRAER CARRITO SEGUN ID------------------------------------//
   async getCartByUserId(userId) {
     try {
-      const cart = await cartModel.findOne({ userId }).populate('products.productId');
-      return cart || null;
-    } catch (error) {
-      console.error("Error al obtener el carrito:", error.message);
-      return null;
-    }
-  }
+        const cart = await cartModel
+            .findOne({ userId })
+            .populate('products.productId');
 
+        if (!cart) {
+            return null;
+        }
+
+        return cart;
+    } catch (error) {
+        console.error("Error al obtener el carrito:", error.message);
+        return null;
+    }
+}
+
+//------------------------------------AGREGAR PRODUCTOS AL CARRITO------------------------------------//
+  
   async addProductToCart(userId, productId, quantity) {
     try {
       let cart = await cartModel.findOne({ userId });
@@ -48,7 +60,7 @@ class CartManager {
 
       if (requestedQuantity > stockAvailable) {
         console.log(`No hay suficiente stock disponible. Stock actual: ${stockAvailable}`);
-        return null; // O manejar el caso según tus necesidades
+        return null; 
       }
 
       if (existingProduct) {
@@ -67,6 +79,10 @@ class CartManager {
       return null;
     }
   }
+
+
+//------------------------------------OBTENER STOCK DE PRODUCTOS------------------------------------//
+
   async getProductStock(productId) {
     try {
       const product = await this.productManager.getProductById(productId);
@@ -77,6 +93,8 @@ class CartManager {
     }
   }
 
+
+//------------------------------------CALCULAR EL TOTAL DEL CARRITO------------------------------------//
   async calculateCartTotal(cart) {
     let total = 0;
 
@@ -88,6 +106,8 @@ class CartManager {
     return total;
   }
 
+
+//------------------------------------OBTENER EL PRECIO------------------------------------//
   async getProductPrice(productId) {
     try {
       const product = await this.productManager.getProductById(productId);

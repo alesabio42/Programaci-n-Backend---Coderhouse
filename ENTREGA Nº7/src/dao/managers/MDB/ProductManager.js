@@ -19,6 +19,8 @@ class ProductManager {
     return null;
   }
 
+
+//------------------------------------AGREGAR PRODUCTO-----------------------------------//
   async addProduct(productData) {
     try {
       const { code } = productData;
@@ -48,6 +50,8 @@ class ProductManager {
     }
   }
 
+
+//------------------------------------ELIMINAR PRODUCTO------------------------------------//
   async deleteProduct(id) {
     try {
         // Verificar si el ID del producto está definido y es válido
@@ -90,19 +94,19 @@ class ProductManager {
         return this.handleError("Error al eliminar el producto:", error);
     }
 }
+
+//-----------------------------------OBTENER PRODUCTOS------------------------------------//
 async getProducts({ limit = 10, page = 1 } = {}) {
   try {
-    console.log("Options:", { limit, page });
+
 
     const options = {
       limit: parseInt(limit),
       page: parseInt(page),
-      sort: { price: 1 },  // Asegúrate de que 'price' coincida con el nombre del campo en tu modelo
+      sort: { price: 1 },  
     };
 
     const result = await productModel.paginate({}, options);
-
-    console.log("Result:", result);
 
     return result;
   } catch (error) {
@@ -110,6 +114,8 @@ async getProducts({ limit = 10, page = 1 } = {}) {
     return [];
   }
 }
+
+//-----------------------------------OBTENER PRODUCTOS POR ID------------------------------------//
 
 async getProductById(id) {
   try {
@@ -121,18 +127,7 @@ async getProductById(id) {
   }
 }
 
-
-async getUniqueCategories() {
-  try {
-    const categories = await productModel.distinct('categoria');
-    console.log(categories); // Puedes dejar este console.log para verificar en la consola
-    return categories;
-  } catch (error) {
-    this.handleError("Error al obtener las categorías únicas:", error.message);
-    return [];
-  }
-}
-
+//-----------------------------------CARGAR PRODUCTOS------------------------------------//
 
 
   async loadProducts() {
@@ -143,6 +138,9 @@ async getUniqueCategories() {
       this.handleError("Error al cargar los productos desde la base de datos:", error.message);
     }
   }
+
+
+//-----------------------------------EXISTENCIA DE PRODUCTOS------------------------------------//
 
   async productExists(code) {
     const existingProduct = await productModel.findOne({ code });

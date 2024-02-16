@@ -12,6 +12,26 @@ header {
     padding: 10px;
 }
 
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+}
+
+.navbar-left a,
+.navbar-right a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.navbar-left a:hover,
+.navbar-right a:hover {
+    color: #28a745; 
+}
 
 main {
     max-width: 800px;

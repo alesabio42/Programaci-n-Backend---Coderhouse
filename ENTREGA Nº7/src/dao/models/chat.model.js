@@ -1,4 +1,6 @@
 // RUTA DE ACCESO: src/dao/models/chat.model.js
+
+
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
