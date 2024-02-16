@@ -1,4 +1,4 @@
-const { cartModel } = require('../path/to/cart.model');  // Ajusta la ruta según la ubicación de tu modelo de carritos
+const { cartModel } = require('../path/to/cart.model'); 
 
 class CartManager {
   async createCart(userId) {
