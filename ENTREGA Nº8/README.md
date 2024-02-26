@@ -5,29 +5,41 @@ Este es un backend simple para la gestión de productos y carritos utilizando Ex
 ## Estructura de Archivos
 
 src
+├── config
+│   ├── passport.config.js
+
 ├── Dao
 │   ├── Managers
 │   │   ├── FS (Filesystem)
 │   │   │   ├── CardManager.js
 │   │   │   └── ProductManager.js
+
+
 │   │   └── MDB (mongodb)
 │   │       ├── CartManager.js
 │   │       └── ProductManager.js
 │   │       └── ChatManager.js
+│   │       └── userManager.js
+
 │   ├── Models
 │       ├── carts.model.js
 │       ├── chat.model.js
 │       └── products.model.js
+│       └── user.model.js
 │
 ├── jsonDB
 │       ├── carrito.json
 │       ├── products.json
-│       
+
+├── middleware
+│   ├── authentication.middleware.js
 │
 ├── public
 │       ├── css
 │         ├── cart.css
 │         ├── home.css
+│         ├── index.css
+│         ├── login.css
 │         ├── products.css
 │         └── realTimeChat.ccs
 │         └── realTimeProducts.ccs
@@ -43,16 +55,25 @@ src
 │
 ├── Routes
 │   ├── cards.js
+│   ├── chats.js
 │   └── products.js
-│   └── chat.js
+│   ├── session.js
+│   ├── user.js
+
+└── utils
+│   ├── hashBcrypt.js
+
+
 └── Views
     ├── Layouts
     ├── cart.handlebars     
     ├── chat.handlebars 
     ├── home.handlebars
     ├── index.handlebars
+    ├── login.handlebars    
     ├── products.handlebars 
     ├── realTimeProducts.handlebars
+    ├── register.handlebars    
     ├── vistaproduct.handlebars 
 
 app.js
@@ -78,4 +99,6 @@ package.json
     ```
 
 ## USO: 
-Ingresa en localhost: 8080 y podras ver el proyecto.
+Ingresa en http://localhost:8080/login 
+
+Se puede probar el rol de admin con el siguiente usuario y contrasea: adminCoder@coder.com - adminCod3r123

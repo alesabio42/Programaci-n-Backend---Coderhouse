@@ -7,7 +7,20 @@ const mongoose = require('mongoose');
 const { Server: ServerIO } = require('socket.io');
 const cors = require('cors');
 const cookieParser = require ('cookie-parser');
+
+
+//------------------------------SESSION------------------------------
+
+const FileStore = require('session-file-store')
+
+const sessionRouter = require('./src/routes/session');
+
+/// passport estrategias para el sessions
 const session = require ('express-session');
+const passport = require('passport')
+const MongoStore = require('connect-mongo')
+const { initializePassport } = require('./src/config/passport.config')
+
 
 
 //------------------------------MODELS------------------------------
@@ -25,7 +38,7 @@ const CartManager = require('./src/dao/managers/MDB/CartManager');
 const createCartsRouter = require('./src/routes/carts');
 const cartsRouter = createCartsRouter(new CartManager());
 const chatRouter = require('./src/routes/chat');
-const sessionRouter = require('./src/routes/session');
+
 
 //------------------------------GESTOR------------------------------
 const productManager = new ProductManager(productModel);
@@ -67,6 +80,8 @@ app.use(
   })
 );
 
+
+
 //  ------------------------------------------------------------Middleware-------------------------------------------------------
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -74,15 +89,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser('cookiefirmada'));
-app.use(session({
-  secret: 'secretCoder',
-  resave: true,
-  saveUninitialized: true,
-}))
-
-app.use('/session', sessionRouter)
-
-
 
 //  -----------------------------------------------------Configuración de Handlebars ------------------------------------------
 const hbs = exphbs.create({
@@ -108,16 +114,45 @@ app.set('view engine', 'handlebars');
 
 
 
+//  --------------------------------------------------CONFIGURACION DE SESSION ------------------------------
+
+initializePassport()
+app.use(session({
+  store: MongoStore.create({
+      mongoUrl: 'mongodb+srv://alejandrosabio24:aslaebio12344321@alejandrosabio.fo2mcjv.mongodb.net/ecommerce?retryWrites=true&w=majority',
+      mongoOptions: {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+      },
+      ttl: 15000000000 * 24
+  }), 
+  secret: 's3cr3t0',
+  resave: true,
+  saveUninitialized: true,
+}))
 
 
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 //  --------------------------------------------------Rutas principales u otras rutas ------------------------------
 
 
+app.use('/session', sessionRouter);
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
 
 app.get('/', (req, res) => {
-  res.render('index');
+  const user = req.session.user;
+  res.render('index', { user });
 });
 
 app.get('/home', (req, res) => {
@@ -134,6 +169,8 @@ app.get('/products', async (req, res) => {
 
     const result = await productManager.getProducts({ limit, page });
 
+    const user = req.session.user;
+
     res.render('products', {
       products: result.docs,
       hasPrevPage: result.hasPrevPage,
@@ -142,6 +179,7 @@ app.get('/products', async (req, res) => {
       nextPage: result.nextPage,
       page: result.page,
       currentLimit: limit,
+      user,  // Pasar el usuario a la vista
     });
   } catch (error) {
     console.error(error);
@@ -184,7 +222,6 @@ app.post('/add-to-cart', async (req, res) => {
       res.status(500).json({ error: 'Error al agregar el producto al carrito' });
   }
 });
-
 
 
 
