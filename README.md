@@ -12,6 +12,8 @@ En el marco de mi recorrido por el curso de Programación Backend realizado en C
 6. **ENTREGA 6 - Práctica de integración sobre el ecommerce:** Introduce el modelo de persistencia de Mongo y Mongoose al proyecto.
 7. **ENTREGA 7 - Segunda pre-entrega de tu Proyecto final:** Agrega una vista de productos donde los usuarios pueden añadir elementos al carrito y visualizar su composición.
 8. **ENTREGA 8 - Implementación de Login:** Implementa el sistema de inicio de sesión (Login) y registro (Register), permitiendo la diferenciación entre dos roles de usuarios: administrador y usuario estándar. En esta entrega se ha integrado el hacheo de contraseñas mediante bcrypt y la implementación de Passport para las funciones de registro y login.
-8. **ENTREGA 9 - RRefactor de Login:** En esta fase, se ha llevado a cabo una mejora en la autenticación del sistema al incorporar el método de autenticación de GitHub a la interfaz de inicio de sesión.
+9. **ENTREGA 9 - Refactor de Login:** En esta fase, se ha llevado a cabo una mejora en la autenticación del sistema al incorporar el método de autenticación de GitHub a la interfaz de inicio de sesión.
+10. **ENTREGA 10 - Práctica de integración sobre tu ecommerce:**
+11. **ENTREGA 11 - Reestructura de nuestro servidor:** 
 
 ¡Gracias por explorar mi repositorio! 
