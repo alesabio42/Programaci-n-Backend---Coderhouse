@@ -58,14 +58,15 @@ src
 │   ├── chats.js
 │   └── products.js
 │   ├── session.js
-│   ├── user.js
-
+│
 └── utils
 │   ├── hashBcrypt.js
-
-
+│   ├── jsonwebtoken.js
+│
+│
 └── Views
     ├── Layouts
+         └── main.handlebars.js
     ├── cart.handlebars     
     ├── chat.handlebars 
     ├── home.handlebars

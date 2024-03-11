@@ -1,22 +1,21 @@
-// Middleware de autenticación
+const jwt = require('jsonwebtoken');
+
 function auth(req, res, next) {
-    // Verificar si el usuario está autenticado
-    if (!req.session?.user) {
-      return res.status(401).json({ status: 'error', message: 'No autorizado' });
+    const token = req.cookies['jwt'];
+
+    if (!token) {
+        console.log('Token no encontrado');
+        return res.status(401).json({ status: 'error', message: 'No autorizado' });
     }
-  
-    // Imprime el objeto completo para verificar
-    console.log('Usuario en middleware:', req.session?.user);
-  
-    // Agregar la información del rol al objeto de solicitud para que esté disponible en las rutas
-    req.userRole = req.session?.user.rol;
-  
-    // Imprime el rol para verificar
-    console.log('Rol del usuario en middleware:', req.userRole);
-  
-    // Continuar con el siguiente middleware o ruta
-    next();
-  }
-  
+
+    try {
+        const decodedUser = jwt.verify(token, 'palabrasecretaparatoken');
+        req.user = decodedUser;  // Agregar la información del usuario al objeto de solicitud
+        next();
+    } catch (error) {
+        console.log('Error al verificar el token:', error.message);
+        return res.status(401).json({ status: 'error', message: 'Token inválido' });
+    }
+}
 
 module.exports = { auth };

@@ -1,63 +1,101 @@
-const { Router} = require('express');
+const { Router } = require('express');
 const router = Router();
-const UserManager = require ('../dao/managers/MDB/userManager');
+const UserManager = require('../dao/managers/MDB/userManager');
+const { createHash, isValidPassword } = require('../utils/hashBcrypt')
 const { auth } = require('../../src/middleware/authetication.middleware');
+const { generateToken, authTokenMiddleware } = require('../utils/jsonwebtoken');
 
-const passport = require('passport')
+const passport = require('passport');
 
-const sessionsService = new UserManager ();
+const sessionsService = new UserManager();
 
-router.post('/register', passport.authenticate('register', {failureRedirect: '/routes/session/faillogin'}) ,async (req, res)=>{
-  res.send({status: 'success', message: 'user registered'})
-})
+router.post('/register', async (req, res) => {
+  try {
+      // Obtener datos del usuario desde el cuerpo de la solicitud (req.body)
+      const { first_name, last_name, age, email, password } = req.body;
+
+      // Verificar si el usuario ya existe
+      let userResponse = await sessionsService.getUsersBy({ email });
+      let user = userResponse.status === 'success' ? userResponse.users[0] : null;
+
+      if (user) {
+          // El usuario ya existe, puedes manejar esto como desees
+          return res.status(400).send({ status: 'error', message: 'El usuario ya existe' });
+      }
+
+      // Crear un nuevo usuario
+      const newUser = {
+          first_name,
+          last_name,
+          age,
+          email,
+          password: createHash(password),
+          cart: undefined
+      };
+
+      // Registrar el usuario en la base de datos
+      let result = await sessionsService.createUser(newUser);
+
+      res.redirect('/login');
+
+      
+  } catch (error) {
+      console.error('Error en el registro:', error);
+      res.status(500).send({ status: 'error', message: 'Error en el registro' });
+  }
+});
 
 
 router.get('/failregister', async (req, res) => {
-  res.send({error: 'falla en el register'})
-})
-router.post('/login', passport.authenticate('login', {failureRedirect: '/routes/session/faillogin'}) ,async (req, res)=>{
-  if (!req.user) return res.status(401).send({status: 'error', error: 'creadential invalid'})
-  
-  req.session.user = { 
-    first_name: req.user.first_name, 
-    last_name: req.user.last_name,
-    email: req.user.email, 
-    id: req.user._id,
-    rol: req.user.rol  // Asegúrate de tener esta línea
-};
-  
-  console.log('Rol del usuario:', req.user.rol);
-  res.redirect('/session/current');
+  res.send({ error: 'falla en el register' });
+});
 
-})
 
-router.get('/github', passport.authenticate('github', {scope:['user:email']}),async (req, res) => {})
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
-router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/session/login' }), async (req, res) => {
   try {
-      if (!req.user) {
-          console.error('Fallo en la autenticación de GitHub');
-          return res.redirect('/session/login');
+      const userResponse = await sessionsService.getUsersBy({ email });
+      
+      // Validar que exista el usuario
+      if (!userResponse || userResponse.users.length === 0) {
+          return res.status(401).send('No coincide las credenciales');
       }
 
-      req.session.user = req.user;
-      res.redirect('/products');
+      const user = userResponse.users[0];
+
+      // Validar la contraseña
+      if (!isValidPassword(password, user.password)) {
+          return res.status(401).send('No coincide las credenciales');
+      }
+
+      // Generar token
+      const token = generateToken({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        id: user._id,
+        email: user.email,
+    });
+
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000, // Tiempo de vida de la cookie en milisegundos (24 horas)
+    });
+
+    res.redirect('/session/current'); 
+
   } catch (error) {
-      console.error('Error en la autenticación de GitHub:', error);
-      res.redirect('/session/login');
+      console.error('Error en el inicio de sesión:', error);
+      res.status(500).send({ status: 'error', message: 'Error en el inicio de sesión', error: error.message });
   }
 });
 
 
 
-
-router.get('/faillogin', async (req, res) => {
-  res.send({error: 'falla en el register'})
-})
-
-// Ruta protegida por el middleware de autenticación
-router.get('/current', auth, async (req, res) => {
+router.get('/current', authTokenMiddleware, async (req, res) => {
   // Verificar el rol del usuario y redirigir en consecuencia
+  const user = req.user;
+  console.log('Datos del usuario:', user);
   if (req.userRole === 'admin') {
       // Si el rol es 'admin', redirigir a la ruta de administrador
       res.redirect('/');
@@ -65,163 +103,54 @@ router.get('/current', auth, async (req, res) => {
       // Si el rol es 'user', redirigir a la ruta de usuario
       res.redirect('/products');
   }
-}); 
+});
 
 
+// Ruta para iniciar la autenticación con GitHub
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+// Ruta de callback después de la autenticación con GitHub
+router.get('/githubcallback', (req, res, next) => {
+  passport.authenticate('github', { failureRedirect: '/session/login' }, async (err, user) => {
+      try {
+          if (err || !user) {
+              console.error('Fallo en la autenticación de GitHub');
+              return res.redirect('/session/login');
+          }
+
+          // Generar token JWT
+          const token = generateToken({
+              first_name: user.first_name,
+              last_name: user.last_name,
+              id: user._id,
+              email: user.email,
+          });
+
+          // Establecer la cookie con el token JWT
+          res.cookie('jwt', token, {
+              httpOnly: true,
+              maxAge: 24 * 60 * 60 * 1000, // Tiempo de vida de la cookie en milisegundos (24 horas)
+          });
+
+          res.redirect('/session/current');
+      } catch (error) {
+          console.error('Error en la autenticación de GitHub:', error);
+          res.redirect('/session/login');
+      }
+  })(req, res, next);
+});
+
+router.get('/faillogin', async (req, res) => {
+  res.send({ error: 'falla en el register' });
+});
 
 
 
 router.get('/logout', (req, res) => {
-  // Utiliza la función req.logout() para cerrar la sesión
-  req.logout(err => {
-    if (err) {
-      console.error('Error al hacer logout:', err);
-      return res.status(500).send({ status: 'error', message: 'Error al cerrar sesión' });
-    }
-
-    // Redirige a la página de inicio de sesión o a donde desees después del logout
-    res.redirect('/login');
-  });
+  // Eliminar la cookie de JWT al hacer logout
+  res.clearCookie('jwt');
+  // Otras acciones de logout, si las tienes
+  res.redirect('/login');
 });
 
-module.exports = router
-
-// router.post('/register', async (req, res) => {
-//   const { first_name, last_name, email, password } = req.body;
-
-//   try {
-//       // Verificar si el usuario ya existe utilizando el UserManager
-//       const exists = await sessionsService.getUsersBy({ email });
-
-//       if (exists.status === 'success' && exists.users.length > 0) {
-//           return res.status(401).json({ status: 'error', message: 'El usuario ya existe' });
-//       }
-
-//       // Encriptar la contraseña antes de almacenarla en la base de datos
-//       const saltRounds = 10;
-//       const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-//       // Crear el nuevo usuario con la contraseña encriptada
-//       const newUser = {
-//           first_name,
-//           last_name,
-//           email,
-//           password: hashedPassword,
-//           rol: 'user'
-//       };
-
-//       // Almacenar el nuevo usuario en la base de datos utilizando el UserManager
-//       const result = await sessionsService.createUser(newUser);
-
-//       res.status(200).json({
-//           status: 'success',
-//           message: 'Usuario creado correctamente',
-//           user: result,
-//       });
-//   } catch (error) {
-//       console.error('Error al crear el usuario:', error);
-//       res.status(500).json({ status: 'error', message: 'Error al crear el usuario' });
-//   }
-// });
-
-// router.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
-
-//   try {
-//     // Buscar al usuario por el correo electrónico en la base de datos
-//     const userResponse = await sessionsService.getUsersBy({ email });
-
-//     if (userResponse.status !== 'success' || userResponse.users.length === 0) {
-//       return res.status(401).json({ status: 'error', message: 'HOLA Usuario o contraseña incorrectos' });
-//     }
-
-//     const user = userResponse.users[0];
-//     console.log('Estructura de user:', user);
-
-//     // Comparar la contraseña proporcionada con la contraseña almacenada en la base de datos
-//     console.log('Contraseña almacenada:', user.password);
-//     console.log('Contraseña proporcionada:', password);
-
-//     // Realizar la comparación directa de las contraseñas en texto plano
-//     const passwordMatch = user ? bcrypt.compareSync(password, user.password) : false;
-
-
-
-//     console.log('1 Contraseña almacenada:', user.password);
-//     console.log('2 Contraseña proporcionada:', password);
-
-//     console.log('passwordMatch:', passwordMatch);
-
-//     if (!passwordMatch) {
-//       return res.status(401).json({ status: 'error', message: 'CHAU Usuario o contraseña incorrectos' });
-//     }
-
-//     // Si las contraseñas coinciden, establecer la sesión del usuario
-//     req.session.user = {
-//       id: user._id,
-//       name: `${user.first_name} ${user.last_name}`,
-//       email: user.email,
-//       rol: user.rol
-//     };
-
-//     res.status(200).json({
-//       status: 'success',
-//       payload: req.session.user,
-//       message: 'Login correcto',
-//     });
-//   } catch (error) {
-//     console.error('Error al iniciar sesión:', error);
-//     res.status(500).json({ status: 'error', message: 'Error al iniciar sesión' });
-//   }
-// });
-
-
-// // Ruta del dashboard del administrador
-// router.get('/', auth, (req, res) => {
-//   res.status(200).json({ status: 'success', message: 'Dashboard del administrador' });
-// });
-
-// // Ruta del dashboard del usuario normal
-// router.get('/products', auth, (req, res) => {
-//   res.status(200).json({ status: 'success', message: 'Dashboard del usuario normal' });
-// });
-
-
-
-// router.get('/setcookie', (req, res) => {
-//     // Configurar la cookie
-//     res.cookie('miCookie', 'Hola, esta es mi cookie', { maxAge: 900000}).send('Cookie configurada correctamente');
-//   });
-//   router.get('/setcookiesigned', (req, res) => {
-//     // Configurar la cookie
-//     res.cookie('miCookie', 'Hola, esta es mi cookie firmada', { maxAge: 900000, signed:true}).send('Cookie configurada correctamente');
-//   });
-  
-//   router.get('/getcookie', (req, res) => {
-  
-//     res.send(req.cookies);
-//   });
-  
-  
-//   router.get('/getcookiesigned', (req, res) => {
-//     console.log(req.signedCookies)
-  
-//     res.send(req.signedCookies);
-//   });
-  
-  
-  
-//   router.get('/deletecookie', (req, res) => {
-  
-  
-  
-//     res.clearCookie('miCookie').send('Cookie borrada');
-//   });
-  
-
-
-
-
-
-// Exportar router
-
+module.exports = router;

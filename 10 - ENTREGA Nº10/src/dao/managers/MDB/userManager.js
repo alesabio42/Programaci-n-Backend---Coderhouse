@@ -1,31 +1,45 @@
 const bcrypt = require('bcrypt');
 const { userModel } = require('../../models/user.model');
 
+const CartManager = require('./CartManager');
+
+const CartService = new CartManager();
+
+
 class UserManager {
-    async createUser({ first_name, last_name, email, password }) {
+    async createUser({ first_name, last_name, age, email, password }) {
         try {
             const exists = await userModel.findOne({ email });
-    
+
             if (exists) {
                 return { status: 'error', message: 'El usuario ya existe' };
             }
-    
-            const newUser = {
+
+            const newUser = await userModel.create({
                 first_name,
                 last_name,
+                age,
                 email,
                 password,
-                rol: 'user'
-            };
-    
-            const result = await userModel.create(newUser);
-    
-            return { status: 'success', message: 'Usuario creado correctamente', user: result };
+                cart: undefined
+            });
+
+            // Obtener el _id del usuario
+            const userId = (await userModel.findOne({ email }))._id;
+
+            // Crear el carrito para el nuevo usuario con el mismo _id
+            const newCart = await CartService.createCart(userId.toString());
+            
+            // Actualizar el campo cart del usuario con el _id del carrito
+            await userModel.findByIdAndUpdate(userId, { cart: newCart._id });
+
+            return { status: 'success', message: 'Usuario creado correctamente', user: newUser };
         } catch (error) {
             console.error('Error al crear el usuario:', error);
             return { status: 'error', message: 'Error al crear el usuario' };
         }
     }
+
 
     async getUsersPaginate({ page = 1, limit = 10 }) {
         try {

@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const { Server: ServerIO } = require('socket.io');
 const cors = require('cors');
 const cookieParser = require ('cookie-parser');
+const { generateToken, authTokenMiddleware } = require('./src/utils/jsonwebtoken');
+
 
 
 //------------------------------SESSION------------------------------
@@ -16,7 +18,7 @@ const FileStore = require('session-file-store')
 const sessionRouter = require('./src/routes/session');
 
 /// passport estrategias para el sessions
-const session = require ('express-session');
+// const session = require ('express-session');
 const passport = require('passport')
 const MongoStore = require('connect-mongo')
 const { initializePassport } = require('./src/config/passport.config')
@@ -88,7 +90,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+
 app.use(cookieParser('cookiefirmada'));
+initializePassport();
+app.use(passport.initialize());
+
 
 //  -----------------------------------------------------Configuración de Handlebars ------------------------------------------
 const hbs = exphbs.create({
@@ -116,24 +123,7 @@ app.set('view engine', 'handlebars');
 
 //  --------------------------------------------------CONFIGURACION DE SESSION ------------------------------
 
-initializePassport()
-app.use(session({
-  store: MongoStore.create({
-      mongoUrl: 'mongodb+srv://alejandrosabio24:aslaebio12344321@alejandrosabio.fo2mcjv.mongodb.net/ecommerce?retryWrites=true&w=majority',
-      mongoOptions: {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-      },
-      ttl: 15000000000 * 24
-  }), 
-  secret: 's3cr3t0',
-  resave: true,
-  saveUninitialized: true,
-}))
 
-
-app.use(passport.initialize())
-app.use(passport.session())
 
 
 //  --------------------------------------------------Rutas principales u otras rutas ------------------------------
@@ -142,12 +132,14 @@ app.use(passport.session())
 app.use('/session', sessionRouter);
 
 app.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login');4
+
 });
 
 app.get('/register', (req, res) => {
   res.render('register');
 });
+
 
 
 app.get('/', (req, res) => {
@@ -163,13 +155,14 @@ app.get('/realTimeProducts', (req, res) => {
   res.render('realTimeProducts', { products: productManager.products });
 });
 
-app.get('/products', async (req, res) => {
+app.get('/products', authTokenMiddleware, async (req, res) => {
   try {
     const { limit = 10, page = 1 } = req.query;
 
     const result = await productManager.getProducts({ limit, page });
 
-    const user = req.session.user;
+    const user = req.user;
+    console.log('Datos del usuario:', user);
 
     res.render('products', {
       products: result.docs,
@@ -186,6 +179,7 @@ app.get('/products', async (req, res) => {
     res.status(500).json({ error: 'Error al obtener los productos' });
   }
 });
+
 app.post('/vistaproduct', async (req, res) => {
   try {
       const productId = req.body.productId;
@@ -205,9 +199,10 @@ app.post('/vistaproduct', async (req, res) => {
   }
 });
 
-app.post('/add-to-cart', async (req, res) => {
+app.post('/add-to-cart', authTokenMiddleware, async (req, res) => {
   try {
-      const userId = 'userIdDummy'; // ojo el usuariooooooooooooo
+    const user = req.user;
+    const userId = user.id;
       const productId = req.body.productId;
       const quantity = req.body.quantity;
 
@@ -224,18 +219,17 @@ app.post('/add-to-cart', async (req, res) => {
 });
 
 
-
 app.use('/chat', chatRouter);
 
 
 // Rutas del carrito
-app.get('/cart', async (req, res) => {
+app.get('/cart',authTokenMiddleware, async (req, res) => {
   try {
-      const userId = 'userIdDummy'; // Reemplazar esto con la forma adecuada de obtener el ID del usuario, todavia no implementamos login
+    const user = req.user;
+    const userId = user.id; 
       const cartContent = await cartManager.getCartByUserId(userId);
 
       if (cartContent) {
-          console.log('Cart Content:', cartContent);
           res.render('cart', { cartContent });
       } else {
           res.status(500).json({ error: 'Error al cargar el carrito.' });
