@@ -13,7 +13,25 @@ En el marco de mi recorrido por el curso de Programación Backend realizado en C
 7. **ENTREGA 7 - Segunda pre-entrega de tu Proyecto final:** Agrega una vista de productos donde los usuarios pueden añadir elementos al carrito y visualizar su composición.
 8. **ENTREGA 8 - Implementación de Login:** Implementa el sistema de inicio de sesión (Login) y registro (Register), permitiendo la diferenciación entre dos roles de usuarios: administrador y usuario estándar. En esta entrega se ha integrado el hacheo de contraseñas mediante bcrypt y la implementación de Passport para las funciones de registro y login.
 9. **ENTREGA 9 - Refactor de Login:** En esta fase, se ha llevado a cabo una mejora en la autenticación del sistema al incorporar el método de autenticación de GitHub a la interfaz de inicio de sesión.
-10. **ENTREGA 10 - Práctica de integración sobre tu ecommerce:**
+10. **ENTREGA 10 - Práctica de integración sobre tu ecommerce:** En la última actualización, se ha modificado el userModel agregando campos como "age" y "cart" (cuenta con el id del carrito del usuario). Además, se ha migrado de session-express a JSON Web Tokens (JWT) para la gestión de sesiones, proporcionando una solución más flexible.
 11. **ENTREGA 11 - Reestructura de nuestro servidor:** 
+
+## Herramientas implementadas a lo largo del curso:
+- **bcrypt (v5.1.1):** Librería para el hashing seguro de contraseñas, utilizada en el almacenamiento seguro de contraseñas mediante el proceso de hash.
+- **connect-mongo (v5.1.0):** Almacena sesiones de Express en MongoDB, garantizando la persistencia de sesiones incluso después de reiniciar el servidor.
+- **cookie-parser (v1.4.6):** Analiza cookies en solicitudes HTTP, facilitando el manejo y análisis de cookies en Express.
+- **express (v4.18.2):** Marco de aplicación web para Node.js, simplifica la creación de servidores y la gestión de rutas y solicitudes HTTP.
+- **express-handlebars (v6.0.7):** Sistema de plantillas para Express, utilizado en la generación de vistas HTML dinámicas.
+- **express-session (v1.18.0):** Middleware de manejo de sesiones para Express, facilita la creación y gestión de sesiones de usuario.
+- **helmet (v7.1.0):** Middleware de seguridad para Express, protege la aplicación mediante la configuración adecuada de encabezados HTTP.
+- **jsonwebtoken (v9.0.2):** Implementa generación y verificación de JSON Web Tokens (JWT) para autenticación basada en token.
+- **mongoose (v8.2.0):** Biblioteca ODM para MongoDB y Node.js, simplifica la interacción con bases de datos MongoDB.
+- **mongoose-paginate-v2 (v1.8.0):** Proporciona paginación para consultas MongoDB utilizando Mongoose.
+- **passport (v0.7.0):** Middleware de autenticación para Node.js, facilita la autenticación de usuarios mediante diferentes estrategias.
+- **passport-github2 (v0.1.12):** Estrategia de autenticación de Passport para GitHub, permite autenticar usuarios mediante cuentas de GitHub.
+- **passport-jwt (v4.0.1):** Estrategia de autenticación de Passport para JSON Web Tokens (JWT), utilizado para autenticar usuarios basados en tokens.
+- **passport-local (v1.0.0):** Estrategia de autenticación de Passport para la autenticación local de usuarios.
+- **session-file-store (v1.5.0):** Almacena sesiones en archivos del sistema, útil para el almacenamiento local de sesiones en desarrollo.
+
 
 ¡Gracias por explorar mi repositorio! 
