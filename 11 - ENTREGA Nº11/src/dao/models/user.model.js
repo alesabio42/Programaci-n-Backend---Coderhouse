@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const usersCollection = 'users';
 
@@ -38,6 +39,8 @@ const usersSchema = new mongoose.Schema({
 usersSchema.pre('findOne', function () {
     this.populate('cart');
   });
+
+  usersSchema.plugin(mongoosePaginate)
 
 const userModel = mongoose.model(usersCollection, usersSchema);
 

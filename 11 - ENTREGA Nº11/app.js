@@ -41,7 +41,7 @@ const createCartsRouter = require('./src/routes/carts');
 const cartsRouter = createCartsRouter(new CartManager());
 const chatRouter = require('./src/routes/chat');
 const purchaseRoutes = require('./src/routes/purchase');
-
+const usersRouter = require('./src/routes/user.router');
 
 //------------------------------GESTOR------------------------------
 const productManager = new ProductManager(productModel);
@@ -145,14 +145,18 @@ app.get('/register', (req, res) => {
 
 
 
-app.get('/', (req, res) => {
-  const user = req.session.user;
+app.get('/', authTokenMiddleware, (req, res) => {
+  const user = req.user;
   res.render('index', { user });
 });
+
 
 app.get('/home', (req, res) => {
   res.render('home', { products: productManager.products });
 });
+
+app.use('/users', usersRouter);
+
 
 app.get('/realTimeProducts', (req, res) => {
   res.render('realTimeProducts', { products: productManager.products });
@@ -229,6 +233,7 @@ app.get('/cart',authTokenMiddleware, async (req, res) => {
     const user = req.user;
     const userId = user.id; 
       const cartContent = await cartManager.getCartByUserId(userId);
+      console.log('Hola carrito:',cartContent);
 
       if (cartContent) {
           res.render('cart', { cartContent });
@@ -245,7 +250,16 @@ app.get('/cart',authTokenMiddleware, async (req, res) => {
 
 app.use(bodyParser.json());
 
-app.use('/purchase', purchaseRoutes);
+// Montar las rutas de compra con el middleware incluido
+app.use('/purchase', (req, res, next) => {
+  // Verificar si el usuario está autenticado y adjuntar su ID a la solicitud
+  if (req.isAuthenticated()) {
+    console.log('ID del usuario:', req.user.id); // Mostrar el ID del usuario en la consola
+    req.body.userId = req.user.id; // Adjuntar el ID del usuario al cuerpo de la solicitud
+  }
+  next(); // Continuar con la siguiente middleware o ruta
+}, purchaseRoutes);
+
 
 app.use('/chat', chatRouter);
 

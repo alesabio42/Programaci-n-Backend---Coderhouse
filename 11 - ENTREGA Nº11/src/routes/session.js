@@ -75,6 +75,7 @@ router.post('/login', async (req, res) => {
         last_name: user.last_name,
         id: user._id,
         email: user.email,
+        role: user.rol
     });
 
       res.cookie('jwt', token, {
@@ -92,11 +93,12 @@ router.post('/login', async (req, res) => {
 
 
 
-router.get('/current', authTokenMiddleware, async (req, res) => {
-  // Verificar el rol del usuario y redirigir en consecuencia
+router.get('/current', authTokenMiddleware, (req, res) => {
+  // Aquí puedes acceder a req.user y realizar las operaciones necesarias
   const user = req.user;
   console.log('Datos del usuario:', user);
-  if (req.userRole === 'admin') {
+
+  if (user.role === 'admin') {
       // Si el rol es 'admin', redirigir a la ruta de administrador
       res.redirect('/');
   } else {
@@ -104,7 +106,6 @@ router.get('/current', authTokenMiddleware, async (req, res) => {
       res.redirect('/products');
   }
 });
-
 
 // Ruta para iniciar la autenticación con GitHub
 router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));

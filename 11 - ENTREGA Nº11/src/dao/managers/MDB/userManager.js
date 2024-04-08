@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const { userModel } = require('../../models/user.model');
 
+
 const CartManager = require('./CartManager');
 
 const CartService = new CartManager();
@@ -43,19 +44,28 @@ class UserManager {
 
     async getUsersPaginate({ page = 1, limit = 10 }) {
         try {
-            const users = await userModel
-                .find()
-                .skip((page - 1) * limit)
-                .limit(Number(limit))
-                .exec();
-
-            return { status: 'success', users };
+            const options = {
+                page: parseInt(page),
+                limit: parseInt(limit),
+            };
+    
+            const result = await userModel.paginate({}, options);
+    
+            return { 
+                status: 'success', 
+                users: result.docs,
+                hasPrevPage: result.hasPrevPage,
+                hasNextPage: result.hasNextPage,
+                prevPage: result.prevPage,
+                nextPage: result.nextPage,
+                page: result.page
+            };
         } catch (error) {
             console.error('Error al obtener el listado paginado de usuarios:', error);
             return { status: 'error', message: 'Error al obtener el listado paginado de usuarios' };
         }
     }
-
+    
     async getUsersBy(query) {
         try {
             const users = await userModel.find(query);
@@ -67,24 +77,26 @@ class UserManager {
         }
     }
 
-    async updateUser(id, { first_name, last_name, email }) {
+
+    async updateUser(id, userData) {
         try {
             const user = await userModel.findByIdAndUpdate(
                 id,
-                { $set: { first_name, last_name, email } },
+                { $set: userData },
                 { new: true }
             );
-
+    
             if (!user) {
                 return { status: 'error', message: 'Usuario no encontrado' };
             }
-
+    
             return { status: 'success', user, message: 'Usuario actualizado correctamente' };
         } catch (error) {
             console.error('Error al editar el usuario por ID:', error);
             return { status: 'error', message: 'Error al editar el usuario por ID' };
         }
     }
+
 
     async deleteUser(id) {
         try {
@@ -117,5 +129,7 @@ async getUserById(id) {
     }
 }
 }
+
+
 
 module.exports = UserManager;

@@ -1,0 +1,25 @@
+const { Router } = require('express');
+const UserController = require('../controllers/user.controller');
+
+const router = Router();
+const userController = new UserController();
+
+
+router.get('/', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const { users, hasPrevPage, hasNextPage, prevPage, nextPage } = await userController.getUsers(page);
+        const pagination = { hasPrevPage, hasNextPage, prevPage, nextPage, page };
+        res.render('users', { users, pagination });
+    } catch (error) {
+        console.error('Error al obtener los datos de los usuarios:', error);
+        res.status(500).send('Error interno del servidor');
+    }
+});
+router.get('/:uid', userController.getUserById.bind(userController)); // Obtener un usuario por su ID
+router.post('/', userController.createUser.bind(userController));// Crear un nuevo usuario
+router.put('/:uid', userController.updateUser.bind(userController)); // Actualizar un usuario existente por su ID
+router.delete('/:uid', userController.deleteUser.bind(userController));// Eliminar un usuario existente por su ID
+router.get('/search', userController.getUsersBy.bind(userController)); // Obtener usuarios según los parámetros de búsqueda
+
+module.exports = router;
