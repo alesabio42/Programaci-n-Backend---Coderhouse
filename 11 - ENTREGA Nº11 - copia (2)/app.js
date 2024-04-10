@@ -38,7 +38,6 @@ const chatRouter = require('./src/routes/chat');
 const purchaseRoutes = require('./src/routes/purchase');
 const usersRouter = require('./src/routes/user.router');
 const cartRouter = require('./src/routes/cart.router');
-const productRouter = require('./src/routes/product.router');
 
 //------------------------------GESTOR------------------------------
 const productManager = new ProductManager(productModel);
@@ -148,28 +147,16 @@ app.get('/', authTokenMiddleware, (req, res) => {
 });
 
 
-
-
-
-
-app.use('/users', usersRouter);
-
-app.use('/inventario', productRouter);
-
-app.use('/cart', cartRouter);
-
-
-//-----------------------------PARA BORRAR---------------------------------
 app.get('/home', (req, res) => {
   res.render('home', { products: productManager.products });
 });
 
+app.use('/users', usersRouter);
+
+
 app.get('/realTimeProducts', (req, res) => {
   res.render('realTimeProducts', { products: productManager.products });
 });
-//-----------------------------PARA BORRAR---------------------------------
-
-
 
 app.get('/products', authTokenMiddleware, async (req, res) => {
   try {
@@ -214,6 +201,44 @@ app.post('/vistaproduct', async (req, res) => {
       res.status(500).json({ error: 'Error al obtener el producto' });
   }
 });
+
+
+app.use('/cart', cartRouter);
+
+// app.post('/add-to-cart', authTokenMiddleware, async (req, res) => {
+//   try {
+//     const user = req.user;
+//     const userId = user.id;
+//       const productId = req.body.productId;
+//       const quantity = req.body.quantity;
+
+
+//       const cart = await cartManager.addProductToCart(userId, productId, quantity);
+
+//       res.json({ success: true });
+
+//   } catch (error) {
+//       console.error('Error al agregar el producto al carrito:', error);
+//       res.status(500).json({ error: 'Error al agregar el producto al carrito' });
+//   }
+// });
+
+// // Rutas del carrito
+// app.get('/cart',authTokenMiddleware, async (req, res) => {
+//   try {
+//     const user = req.user;
+//     const userId = user.id; 
+//       const cartContent = await cartManager.getCartByUserId(userId);
+//       if (cartContent) {
+//           res.render('cart', { cartContent });
+//       } else {
+//           res.status(500).json({ error: 'Error al cargar el carrito.' });
+//       }
+//   } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ error: 'Error al cargar el carrito.' });
+//   }
+// });
 
 
 

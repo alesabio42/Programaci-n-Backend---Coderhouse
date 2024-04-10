@@ -7,34 +7,30 @@ Este es un backend simple para la gestión de productos y carritos utilizando Ex
 src
 ├── config
 │   ├── passport.config.js
-│
-├── controllers
-│   ├── cart.controller.js
-│   ├── session.controller.js
-│   ├── user.controller.js
-│
+
 ├── Dao
 │   ├── Managers
 │   │   ├── FS (Filesystem)
 │   │   │   ├── CardManager.js
 │   │   │   └── ProductManager.js
-│   │   │
-│   │   │
+
+
 │   │   └── MDB (mongodb)
 │   │       ├── CartManager.js
 │   │       └── ProductManager.js
 │   │       └── ChatManager.js
 │   │       └── userManager.js
-│   │
-│   │
+
 │   ├── Models
 │       ├── carts.model.js
 │       ├── chat.model.js
 │       └── products.model.js
-│       └── ticket.model.js
 │       └── user.model.js
 │
-│
+├── jsonDB
+│       ├── carrito.json
+│       ├── products.json
+
 ├── middleware
 │   ├── authentication.middleware.js
 │
@@ -47,26 +43,21 @@ src
 │         ├── products.css
 │         └── realTimeChat.ccs
 │         └── realTimeProducts.ccs
-│         └── users.ccs
 │         └── vistaproducts.ccs
 │
 │       ├── js
 │         ├── buttonHandlers.js
 │         └── home.js
 │         ├── index.js
-│         ├── purchaseScript.js
 │         └── realTimeChat.js
 │         └── realTimeProducts.js
-│         ├── users.js
 │         └── vistaproduct.js
 │
 ├── Routes
-│   ├── cart.router.js
+│   ├── cards.js
 │   ├── chats.js
 │   └── products.js
-│   ├── purchase.js
-│   ├── session.router.js
-│   ├── user.router.js
+│   ├── session.js
 │
 └── utils
 │   ├── hashBcrypt.js
@@ -74,18 +65,17 @@ src
 │
 │
 └── Views
-│   ├── Layouts
-│   │    └── main.handlebars.js
-│   ├── cart.handlebars     
-│   ├── chat.handlebars 
-│   ├── home.handlebars
-│   ├── index.handlebars
-│   ├── login.handlebars    
-│   ├── products.handlebars 
-│   ├── realTimeProducts.handlebars
-│   ├── register.handlebars    
-│   ├── users.handlebars   
-│   ├── vistaproduct.handlebars 
+    ├── Layouts
+         └── main.handlebars.js
+    ├── cart.handlebars     
+    ├── chat.handlebars 
+    ├── home.handlebars
+    ├── index.handlebars
+    ├── login.handlebars    
+    ├── products.handlebars 
+    ├── realTimeProducts.handlebars
+    ├── register.handlebars    
+    ├── vistaproduct.handlebars 
 
 app.js
 package-lock.json
