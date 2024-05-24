@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const { configObject } = require('../config/config');
 
-const private_key = 'palabrasecretaparatoken';
+const private_key = configObject.private_key;
 
 const generateToken = (user) => jwt.sign(user, private_key, { expiresIn: '24h' });
 

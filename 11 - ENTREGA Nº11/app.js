@@ -3,12 +3,20 @@ const http = require('http');
 const helmet = require('helmet');
 const exphbs = require('express-handlebars');
 const path = require('path');
-const mongoose = require('mongoose');
+
 const { Server: ServerIO } = require('socket.io');
 const cors = require('cors');
 const cookieParser = require ('cookie-parser');
 const { generateToken, authTokenMiddleware } = require('./src/utils/jsonwebtoken');
 
+
+
+//------------------------------CONFIGURACION------------------------------
+// Importar 
+const { connectToDatabase, configObject } = require('./src/config/config');
+
+// Llamar a la función para conectar a la base de datos
+connectToDatabase();
 
 
 //------------------------------SESSION------------------------------
@@ -38,7 +46,7 @@ const chatRouter = require('./src/routes/chat');
 const purchaseRoutes = require('./src/routes/purchase');
 const usersRouter = require('./src/routes/user.router');
 const cartRouter = require('./src/routes/cart.router');
-const productRouter = require('./src/routes/product.router');
+// const productRouter = require('./src/routes/product.router');
 
 //------------------------------GESTOR------------------------------
 const productManager = new ProductManager(productModel);
@@ -57,16 +65,6 @@ const io = new ServerIO(server, {
 
 
 
-// ----------------------------------------------Conexión a la base de datos----------------------------------------------------
-(async () => {
-  try {
-    await mongoose.connect('mongodb+srv://alejandrosabio24:aslaebio12344321@alejandrosabio.fo2mcjv.mongodb.net/ecommerce?retryWrites=true&w=majority', {
-    });
-    console.log('Base de datos conectada');
-  } catch (error) {
-    console.log(error);
-  }
-})();
 
 //  ------------------------------Middleware para configurar la política de seguridad de contenido ------------------------------
 app.use(
@@ -153,10 +151,11 @@ app.get('/', authTokenMiddleware, (req, res) => {
 
 
 app.use('/users', usersRouter);
-
-app.use('/inventario', productRouter);
-
 app.use('/cart', cartRouter);
+
+// app.use('/inventario', productRouter);
+
+
 
 
 //-----------------------------PARA BORRAR---------------------------------
@@ -299,7 +298,6 @@ io.on('connection', async (socket) => {
 
 
 // Iniciar el servidor
-const port = 8080;
-server.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
+server.listen(configObject.port, () => {
+  console.log(`Servidor escuchando en http://localhost:${configObject.port}`);
 });
