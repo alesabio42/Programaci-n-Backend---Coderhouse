@@ -13,14 +13,21 @@ switch (configObject.persistence) {
         // Aquí  se van a asignar las implementaciones de MEMORY para UserDao, ProductDao, y CartsDao
         // Ejemplo: UserDao = require("./managers/MEMORY/userDao.memory");
         break;
+
     default:
+        // Conexión a la base de datos de Mongo
         const { connectToDatabase } = require("../config/config");
         connectToDatabase();
+
+        // Implementaciones Mongo para UserDaoMongo
         const UserDaoMongo = require("./managers/MDB/userDao.mongo");
         UserDao = UserDaoMongo;
-        // Aquí también deberías asignar las implementaciones Mongo para ProductDao y CartsDao
-        // Ejemplo: ProductDao = require("./managers/MDB/productDao.mongo");
-        // Ejemplo: CartsDao = require("./managers/MDB/cartsDao.mongo");
+
+        // Implementaciones Mongo para ProductDaoMongo
+        const ProductDaoMongo = require("./managers/MDB/productDao.mongo");
+        ProductDao = ProductDaoMongo;
+
+
         break;
 }
 

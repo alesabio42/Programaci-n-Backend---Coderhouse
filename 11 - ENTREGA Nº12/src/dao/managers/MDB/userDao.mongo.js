@@ -44,7 +44,7 @@ class UserDaoMongo {
 
 
     async getUsersPaginate({ page = 1, limit = 10 }) {
-        try {
+        try {    
             const options = {
                 page: parseInt(page),
                 limit: parseInt(limit),
@@ -52,9 +52,13 @@ class UserDaoMongo {
     
             const result = await userModel.paginate({}, options);
     
+            // Asegúrate de devolver los valores correctamente
             return { 
                 status: 'success', 
                 users: result.docs,
+                totalDocs: result.totalDocs,
+                limit: result.limit,
+                totalPages: result.totalPages,
                 hasPrevPage: result.hasPrevPage,
                 hasNextPage: result.hasNextPage,
                 prevPage: result.prevPage,
@@ -66,6 +70,7 @@ class UserDaoMongo {
             return { status: 'error', message: 'Error al obtener el listado paginado de usuarios' };
         }
     }
+    
     
     async getUsersBy(query) {
         try {

@@ -123,3 +123,74 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+
+    const addButton = document.getElementById('add-user-btn');
+    addButton.addEventListener('click', function() {
+        Swal.fire({
+            title: 'Agregar Usuario',
+            html: `
+                <input id="firstName" type="text" placeholder="Nombre" class="swal2-input">
+                <input id="lastName" type="text" placeholder="Apellido" class="swal2-input">
+                <input id="age" type="number" placeholder="Edad" class="swal2-input">
+                <input id="email" type="email" placeholder="Email" class="swal2-input">
+                <input id="role" type="text" placeholder="Rol" class="swal2-input">
+                <input id="password" type="password" placeholder="Contraseña" class="swal2-input">
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Agregar',
+            cancelButtonText: 'Cancelar',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                const firstName = Swal.getPopup().querySelector('#firstName').value;
+                const lastName = Swal.getPopup().querySelector('#lastName').value;
+                const age = Swal.getPopup().querySelector('#age').value;
+                const email = Swal.getPopup().querySelector('#email').value;
+                const role = Swal.getPopup().querySelector('#role').value;
+                const password = Swal.getPopup().querySelector('#password').value;
+
+                // Enviar datos al servidor
+                return fetch('/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        first_name: firstName,
+                        last_name: lastName,
+                        age: age,
+                        email: email,
+                        role: role,
+                        password: password
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al agregar el usuario');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Mostrar mensaje de éxito con SweetAlert
+                    Swal.fire(
+                        '¡Usuario agregado!',
+                        'El usuario ha sido agregado correctamente.',
+                        'success'
+                    ).then(() => {
+                        // Recargar la página
+                        location.reload();
+                    });
+                })
+                .catch(error => {
+                    // Mostrar mensaje de error con SweetAlert
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema al intentar agregar el usuario',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                });
+            }
+        });
+    });
+});

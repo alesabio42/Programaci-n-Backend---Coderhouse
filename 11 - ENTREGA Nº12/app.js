@@ -44,7 +44,7 @@ const chatRouter = require('./src/routes/chat');
 const purchaseRoutes = require('./src/routes/purchase');
 const usersRouter = require('./src/routes/user.router');
 const cartRouter = require('./src/routes/cart.router');
-// const productRouter = require('./src/routes/product.router');
+const productRouter = require('./src/routes/product.router');
 
 //------------------------------GESTOR------------------------------
 const productManager = new ProductManager(productModel);
@@ -149,9 +149,12 @@ app.get('/', authTokenMiddleware, (req, res) => {
 
 
 app.use('/users', usersRouter);
+
+app.use('/inventario', productRouter);
+
 app.use('/cart', cartRouter);
 
-// app.use('/inventario', productRouter);
+
 
 
 

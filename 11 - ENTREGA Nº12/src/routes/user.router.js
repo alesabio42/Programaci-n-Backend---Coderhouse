@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const { users, hasPrevPage, hasNextPage, prevPage, nextPage } = await userController.getUsers(page);
         const pagination = { hasPrevPage, hasNextPage, prevPage, nextPage, page };
+        console.log('Pagination:', pagination);
         res.render('users', { users, pagination });
     } catch (error) {
         console.error('Error al obtener los datos de los usuarios:', error);
