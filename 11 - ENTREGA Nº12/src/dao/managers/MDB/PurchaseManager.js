@@ -3,12 +3,14 @@
 
 const CartManager = require('./CartManager');
 const ProductManager = require('./ProductManager');
-const Ticket = require('../../models/ticket.model'); // Ajusta la ruta según la estructura de tu proyecto
+const UserDaoMongo = require('./userDao.mongo');
+const Ticket = require('../../models/ticket.model'); 
 
 class PurchaseManager {
   constructor() {
     this.cartManager = new CartManager();
     this.productManager = new ProductManager();
+    this.UserDaoMongo = new UserDaoMongo();
   }
 
   //------------------------------------CREAR TICKET DE COMPRA AL HACER CLIC EN EL BOTÓN------------------------------------//
@@ -34,11 +36,20 @@ class PurchaseManager {
             await this.productManager.reduceProductStock(product.productId, product.quantity);
         }
 
+        // Obtener la información del usuario
+        const user = await this.UserDaoMongo.getUserById(userId);
+        if (!user.user || !user.user.email) {
+            console.log(`No se encontró el usuario o no se proporcionó el email para el usuario con ID ${userId}`);
+            return null;
+        }
+
+
         // Crear un ticket de compra
         const ticket = await Ticket.create({
             code: this.generateUniqueCode(),
             amount: cart.total,
             purchaser: cart.userId,
+            email: user.user.email,
             products: cart.products.map(product => ({
                 productId: product.productId,
                 quantity: product.quantity,

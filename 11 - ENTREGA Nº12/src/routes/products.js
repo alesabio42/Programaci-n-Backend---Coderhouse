@@ -2,13 +2,15 @@
 const express = require('express');
 const router = express.Router();
 const ProductManager = require('../dao/managers/MDB/ProductManager');
-const { productModel } = require('../dao/models/products.model'); // Importa el modelo de productos
+const { productModel } = require('../dao/models/products.model'); 
+const { auth } = require('../middleware/authetication.middleware');
+const verifyRole = require('../middleware/verifyRole.middleware');
 
 // Crear una instancia del nuevo ProductManager
 const productManager = new ProductManager(productModel); // Pasa el modelo de productos como parámetro
 
 // Ruta raíz GET para listar todos los productos
-router.get('/', async (req, res) => {
+router.get('/', auth, verifyRole('user'), async (req, res) => {
   try {
     const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await productModel.paginate({}, { limit: 50, page: 2, lean: true });
 

@@ -1,10 +1,12 @@
 const { Router } = require('express');
 const UserController = require('../controllers/user.controller');
+const { auth } = require('../middleware/authetication.middleware');
+const verifyRole = require('../middleware/verifyRole.middleware');
 
 const router = Router();
 const userController = new UserController();
 
-router.get('/', async (req, res) => {
+router.get('/', auth, verifyRole('admin'), async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const { users, hasPrevPage, hasNextPage, prevPage, nextPage } = await userController.getUsers(page);

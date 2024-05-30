@@ -3,6 +3,8 @@
 const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/product.controller');
+const { auth } = require('../middleware/authetication.middleware');
+const verifyRole = require('../middleware/verifyRole.middleware');
 
 // Rutas para productos
 router.post('/', async (req, res) => {
@@ -10,7 +12,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.get('/', async (req, res) => {
+router.get('/', auth, verifyRole('admin'), async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const { products, hasPrevPage, hasNextPage, prevPage, nextPage } = await productController.getProducts(page);

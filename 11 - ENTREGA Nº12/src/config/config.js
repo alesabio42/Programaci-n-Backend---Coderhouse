@@ -15,7 +15,9 @@ const configObject = {
   port: process.env.PORT || 8080,
   mongo_url: process.env.MONGO_URL,
   private_key: process.env.PRIVATE_KEY || 'palabrasecretaparatoken',
-  persistence: process.env.PERSISTENCE
+  persistence: process.env.PERSISTENCE,
+  gmail_user: process.env.GMAIL_USER_APP,
+  gmail_pass: process.env.GMAIL_PASS_APP
 };
 
 exports.configObject = configObject;

@@ -3,6 +3,8 @@ const http = require('http');
 const helmet = require('helmet');
 const exphbs = require('express-handlebars');
 const path = require('path');
+const { auth } = require('./src/middleware/authetication.middleware');
+const verifyRole = require('./src/middleware/verifyRole.middleware');
 
 const { Server: ServerIO } = require('socket.io');
 const cors = require('cors');
@@ -137,16 +139,10 @@ app.get('/register', (req, res) => {
 });
 
 
-
 app.get('/', authTokenMiddleware, (req, res) => {
   const user = req.user;
   res.render('index', { user });
 });
-
-
-
-
-
 
 app.use('/users', usersRouter);
 
@@ -154,7 +150,7 @@ app.use('/inventario', productRouter);
 
 app.use('/cart', cartRouter);
 
-
+app.use('/chat', chatRouter);
 
 
 
@@ -171,7 +167,7 @@ app.get('/realTimeProducts', (req, res) => {
 
 
 
-app.get('/products', authTokenMiddleware, async (req, res) => {
+app.get('/products', auth, verifyRole('user'), async (req, res) => {
   try {
     const { limit = 10, page = 1 } = req.query;
 
@@ -230,7 +226,7 @@ app.use('/purchase', (req, res, next) => {
 
 
 
-app.use('/chat', chatRouter);
+
 
 
 

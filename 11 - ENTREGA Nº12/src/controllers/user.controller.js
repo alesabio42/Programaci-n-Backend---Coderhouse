@@ -62,15 +62,20 @@ class UserController {
         }
     }
 
-    getUserById = async (req, res) => {
+    async getUserById(req, res) {
         const { id } = req.params;
         try {
-            const result = await this.service.getUserById(id);
-            res.send(result);
+          const user = await this.service.getUserById(id);
+    
+          if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+          }
+    
+          return user; 
         } catch (error) {
-            res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+          console.error('Error al obtener usuario por ID:', error);
+          throw new Error('Error interno del servidor');
         }
+      }
     }
-}
-
 module.exports = UserController;

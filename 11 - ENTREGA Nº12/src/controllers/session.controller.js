@@ -93,6 +93,7 @@ class SessionController {
           last_name: user.last_name,
           id: user._id,
           email: user.email,
+          role: user.rol
         });
 
         res.cookie('jwt', token, {

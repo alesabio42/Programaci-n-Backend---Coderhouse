@@ -1,10 +1,14 @@
 // En el archivo chat.js
 const express = require('express');
 const router = express.Router();
-const Messages = require('../dao/models/chat.model'); // Importa el modelo de mensajes
+const Messages = require('../dao/models/chat.model'); 
+const { auth } = require('../middleware/authetication.middleware');
+const verifyRole = require('../middleware/verifyRole.middleware');
+
+
 
 // Ruta GET para mostrar la vista del chat
-router.get('/', async (req, res) => {
+router.get('/', auth, verifyRole('user'), async (req, res) => {
   try {
     // Obtener todos los mensajes (puedes ajustar esta lógica según tus necesidades)
     const messages = await Messages.find({});
