@@ -15,7 +15,7 @@ En el marco de mi recorrido por el curso de Programación Backend realizado en C
 9. **ENTREGA 9 - Refactor de Login:** En esta fase, se ha llevado a cabo una mejora en la autenticación del sistema al incorporar el método de autenticación de GitHub a la interfaz de inicio de sesión.
 10. **ENTREGA 10 - Práctica de integración sobre tu ecommerce:** En la última actualización, se ha modificado el userModel agregando campos como "age" y "cart" (cuenta con el id del carrito del usuario). Además, se ha migrado de session-express a JSON Web Tokens (JWT) para la gestión de sesiones, proporcionando una solución más flexible.
 11. **ENTREGA 11 - Reestructura de nuestro servidor:** En esta entrega se realiza la separación del router, dejando la siguiente estructura: router, controller y manager.
-12. **ENTREGA 12 - Tercera pre-entrega del Proyecto final:**
+12. **ENTREGA 12 - Tercera pre-entrega del Proyecto final:** En esta entrega se ha añadido un middleware para restringir el acceso a ciertos endpoints, se ha creado un modelo de Ticket y se han implementado funcionalidades clave como el envío de correos electrónicos, Factory, DAO y DTO.
 13. **ENTREGA 13 - Mocking y manejo de errores:**
 14. **ENTREGA 14 - Implementación de logger:**
 15. **ENTREGA 15 - Práctica de integración sobre tu ecommerce:**
