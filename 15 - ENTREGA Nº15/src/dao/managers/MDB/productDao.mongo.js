@@ -8,6 +8,7 @@ class ProductDaoMongo {
     try {
       const { code } = productData;
 
+
       if (!code) {
         console.error("El código del producto es obligatorio");
         return null;
@@ -22,7 +23,6 @@ class ProductDaoMongo {
 
       const product = await productModel.create({ ...productData, code: code.toLowerCase() });
 
-      console.log("Producto agregado correctamente:", product);
 
       return product.toObject();
     } catch (error) {

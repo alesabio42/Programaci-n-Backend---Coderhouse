@@ -7,7 +7,7 @@ class ProductRepository {
         this.dao = productDao; // Instancia de ProductDao según la configuración
     }
 
-    async createProduct({ title, category, description, price, thumbnail, code, stock }) {
+    async createProduct({ title, category, description, price, thumbnail, code, stock, owner }) {
         const newProduct = new ProductDto({
             title,
             category,
@@ -15,7 +15,8 @@ class ProductRepository {
             price,
             thumbnail,
             code,
-            stock
+            stock,
+            owner
         });
 
         return this.dao.addProduct(newProduct);

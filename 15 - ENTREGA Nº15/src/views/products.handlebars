@@ -59,7 +59,7 @@
                 </ul>
             </div>
             <div class="product-actions">
-                <form action="/vistaproduct" method="post">
+                <form action="/products/vistaproduct" method="post">
                     <input type="hidden" name="productId" value="{{this._id}}">
                     <button type="submit" class="viewProduct">VER PRODUCTO</button>
                 </form>
@@ -72,13 +72,13 @@
             <nav aria-label="Page navigation example">
                 <li class="page-item prev">
                 {{#if hasPrevPage}}
-                    <a href="/products?page={{prevPage}}&limit={{currentLimit}}">Anterior</a>
+                    <a href="/products/products?page={{prevPage}}&limit={{currentLimit}}">Anterior</a>
                 {{/if}}
                 </li>
                 <li class="page-item page-number">{{page}}</li>
                 <li class="page-item next">
                 {{#if hasNextPage}}
-                    <a href="/products?page={{nextPage}}&limit={{currentLimit}}">Siguiente</a>
+                    <a href="/products/products?page={{nextPage}}&limit={{currentLimit}}">Siguiente</a>
                 {{/if}}
                 </li>
             </nav>

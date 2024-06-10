@@ -1,9 +1,8 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     const addToCartBtn = document.getElementById('addToCartBtn');
     const productId = addToCartBtn.dataset.productId;
     const productStock = parseInt(addToCartBtn.dataset.productStock, 10);
-
+    const productOwner = addToCartBtn.dataset.productOwner;
 
     addToCartBtn.addEventListener('click', function () {
         Swal.fire({
@@ -38,20 +37,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     body: JSON.stringify({
                         productId: productId,
                         quantity: quantity,
+                        owner: productOwner,
                     }),
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Producto agregado al carrito',
-                            text: `Se agregaron ${quantity} unidades al carrito.`,
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error al agregar el producto al carrito:', error);
-                        alert('Hubo un error al agregar el producto al carrito.');
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Hubo un problema al agregar el producto al carrito.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Producto agregado al carrito',
+                        text: `Se agregaron ${quantity} unidades al carrito.`,
                     });
+                })
+                .catch(error => {
+                    console.error('Error al agregar el producto al carrito:', error);
+                    alert('Hubo un error al agregar el producto al carrito.');
+                });
             }
         });
     });

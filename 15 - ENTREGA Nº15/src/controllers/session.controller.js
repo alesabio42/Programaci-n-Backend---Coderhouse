@@ -72,12 +72,18 @@ class SessionController {
 
   async current(req, res) {
     const user = req.user;
-    if (user.role === 'admin') {
-      res.redirect('/');
-    } else {
-      res.redirect('/products');
+
+    if (!user) {
+        return res.status(401).json({ status: 'error', message: 'No autenticado' });
     }
-  }
+
+    if (user.role === 'admin' || user.role === 'premium') {
+        res.redirect('/');
+    } else {
+        res.redirect('/products/products');
+    }
+}
+
 
   async githubCallback(req, res, next) {
     passport.authenticate('github', { failureRedirect: '/session/login' }, async (err, user) => {

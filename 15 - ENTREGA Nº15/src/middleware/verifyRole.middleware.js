@@ -1,10 +1,10 @@
-const verifyRole = (role) => {
+const verifyRole = (roles) => {
     return (req, res, next) => {
         if (!req.user) {
             return res.status(401).json({ status: 'error', message: 'No autenticado' });
         }
 
-        if (req.user.role !== role) {
+        if (!roles.includes(req.user.role)) {
             return res.status(403).json({ status: 'error', message: 'No autorizado' });
         }
 

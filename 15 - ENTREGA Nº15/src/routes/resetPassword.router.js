@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 router.post('/send-link', async (req, res) => {
     const email = req.body.email;
     const token = crypto.randomBytes(20).toString('hex');
-    const resetLink = `/reset-password/${token}`;
+    const resetLink = `http://localhost:8080/reset-password/${token}`;
 
     const mailContent = `
         <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>

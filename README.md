@@ -18,7 +18,7 @@ En el marco de mi recorrido por el curso de Programación Backend realizado en C
 12. **ENTREGA 12 - Tercera pre-entrega del Proyecto final:** En esta entrega se ha añadido un middleware para restringir el acceso a ciertos endpoints, se ha creado un modelo de Ticket y se han implementado funcionalidades clave como el envío de correos electrónicos, Factory, DAO y DTO.
 13. **ENTREGA 13 - Mocking y manejo de errores:** En esta entrega se incluye manejo de errores al crear productos y agregar usuarios. También se agrega un módulo de Mocking para el servidor que genera 100 productos con el formato de una petición de Mongo en '/mockingproducts'.
 14. **ENTREGA 14 - Implementación de logger:** Se implementó un sistema de logging utilizando la librería Winston, eliminando todos los "console" en los controladores y reemplazándolos por "logger" para mejorar la gestión de logs. Además, se agregó una ruta de prueba (/loggerTest) para verificar el funcionamiento del sistema de logging.
-15. **ENTREGA 15 - Práctica de integración sobre tu ecommerce:**
+15. **ENTREGA 15 - Práctica de integración sobre tu ecommerce:** Se ha implementado un sistema de recuperación de contraseñas con envío de enlace por correo para restablecerla. Además, se ha introducido un nuevo rol de usuario premium con permisos para gestionar productos y una nueva ruta para cambiar roles a premium o user (/users/premium/).
 16. **ENTREGA 16 - Documentar API:** 
 17. **ENTREGA 17 - Módulos de testing para proyecto final:**
 18. **ENTREGA 18 - Práctica de integración sobre tu ecommerce:**

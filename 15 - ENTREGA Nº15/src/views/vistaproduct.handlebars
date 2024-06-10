@@ -16,7 +16,7 @@
     <header>
         <nav class="navbar">
             <div class="navbar-left">
-                <a href="/products">Volver</a>
+                <a href="/products/products">Volver</a>
             </div>
             <div class="navbar-right">
                 <a href="/cart">Ir al Carrito</a>
@@ -33,7 +33,7 @@
         <h1>{{product.title}}</h1>
         <p>{{product.description}}</p>
         <p>Stock: {{product.stock}}</p>
-        <button id="addToCartBtn" data-product-id="{{product._id}}" data-product-stock="{{product.stock}}">Agregar al Carrito</button>
+        <button id="addToCartBtn" data-product-id="{{product._id}}" data-product-stock="{{product.stock}}" data-product-owner="{{product.owner}}">Agregar al Carrito</button>
 
     </div>
 </div>

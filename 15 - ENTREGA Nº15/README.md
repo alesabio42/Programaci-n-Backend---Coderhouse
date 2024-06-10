@@ -113,3 +113,5 @@ package.json
 Ingresa en http://localhost:8080/login 
 
 Se puede probar el rol de admin con el siguiente usuario y contrasea: adminCoder@coder.com - adminCod3r123
+
+Se puede probar el rol de premium con el siguiente usuario y contrasea: premiumCoder@coder.com - premiumCod3r123

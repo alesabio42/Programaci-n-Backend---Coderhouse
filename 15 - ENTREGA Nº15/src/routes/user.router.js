@@ -19,6 +19,23 @@ router.get('/', auth, verifyRole('admin'), async (req, res) => {
     }
 });
 
+
+router.put('/premium/:uid', async (req, res) => {
+    try {
+        const { uid } = req.params; // Obtiene el ID del usuario de los parámetros de la URL
+        const { role } = req.body; // Obtiene el nuevo rol del cuerpo de la solicitud
+console.log('id',uid,'role',role)
+        // Llama al método en el controlador para actualizar el rol del usuario
+        const updatedUser = await userController.updateUserById(uid, { role });
+
+        // Envía el usuario actualizado como respuesta
+        res.json(updatedUser);
+    } catch (error) {
+        console.error('Error al cambiar el rol del usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor al cambiar el rol del usuario' });
+    }
+});
+
 router.route('/:uid')
     .get(userController.getUserById.bind(userController)) // Obtener un usuario por su ID
     .put(userController.updateUser.bind(userController)) // Actualizar un usuario existente por su ID

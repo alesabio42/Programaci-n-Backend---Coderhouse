@@ -30,7 +30,7 @@ const usersSchema = new mongoose.Schema({
     },
     rol: {
         type: String,
-        enum: ['user', 'admin'],
+        enum: ['user', 'admin', 'premium'],
         default: 'user'
     },
     cart: {

@@ -32,7 +32,7 @@ const Messages = require('./src/dao/models/chat.model');
 
 //------------------------------MANAGERS------------------------------
 const ProductManager = require('./src/dao/managers/MDB/ProductManager');
-const CartManager = require('./src/dao/managers/MDB/CartManager'); 
+
 
 //------------------------------ROUTERS------------------------------
 const chatRouter = require('./src/routes/chat');
@@ -43,10 +43,11 @@ const cartRouter = require('./src/routes/cart.router');
 const productRouter = require('./src/routes/product.router');
 const mockingProductRouter = require('./src/routes/mocking.products');
 const testRouter = require('./src/routes/testRouter'); 
+const productsRouter = require('./src/routes/products.router');
 
 //------------------------------GESTOR------------------------------
 const productManager = new ProductManager(productModel);
-const cartManager = new CartManager();
+
 
 const bodyParser = require('body-parser');
 const app = express();
@@ -150,48 +151,7 @@ app.get('/realTimeProducts', (req, res) => {
 //-----------------------------PARA BORRAR---------------------------------
 
 
-
-app.get('/products', auth, verifyRole('user'), async (req, res) => {
-  try {
-    const { limit = 10, page = 1 } = req.query;
-
-    const result = await productManager.getProducts({ limit, page });
-
-    const user = req.user;
-
-    res.render('products', {
-      products: result.docs,
-      hasPrevPage: result.hasPrevPage,
-      hasNextPage: result.hasNextPage,
-      prevPage: result.prevPage,
-      nextPage: result.nextPage,
-      page: result.page,
-      currentLimit: limit,
-      user,  // Pasar el usuario a la vista
-    });
-  } catch (error) {
-    logger.error(error);
-    res.status(500).json({ error: 'Error al obtener los productos' });
-  }
-});
-
-app.post('/vistaproduct', async (req, res) => {
-  try {
-      const productId = req.body.productId;
-
-      // Obtén el producto específico según el ID
-      const product = await productManager.getProductById(productId);
-
-      // Renderiza la vista con la información del producto
-      res.render('vistaproduct', { product });
-
-  } catch (error) {
-      logger.error(error);
-      res.status(500).json({ error: 'Error al obtener el producto' });
-  }
-});
-
-
+app.use('/products', productsRouter);
 
 
 

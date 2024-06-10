@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteButtons.forEach(button => {
         button.addEventListener('click', function() {
             const productId = button.dataset.productId;
-            console.log('ID del producto a elimr:', productId);
 
             if (!productId) {
                 console.error('ID del producto no pasado por vista');
@@ -48,9 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
-
-
-
 
 
     const editButtons = document.querySelectorAll('.edit-btn');
