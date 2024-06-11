@@ -1,6 +1,10 @@
 # Backend de Gestión de Productos y Carritos
 
+<<<<<<< HEAD
 Este proyecto es un backend simple para la gestión de productos y carritos, utilizando diferentes herramientas aprendidas a lo largo del curso de Desarrollo Backend de Coderhouse.
+=======
+Este es un backend simple para la gestión de productos y carritos utilizando diferentes herramientas aprendidas a lo largo del curso de Desarrollo Backend de Coderhouse
+>>>>>>> ca99286acd3bfd3180209ac84bfaeb78cb890ec6
 
 ## Instalación y Ejecución
 
@@ -26,6 +30,7 @@ Este proyecto es un backend simple para la gestión de productos y carritos, uti
 
 1. Accede a la aplicación en: [http://localhost:8080/login](http://localhost:8080/login)
 
+<<<<<<< HEAD
 2. **Roles de usuario**:
     - **Admin**:
         - Usuario: `adminCoder@coder.com`
@@ -51,3 +56,6 @@ Este proyecto es un backend simple para la gestión de productos y carritos, uti
 ---
 
 ¡Gracias por utilizar este backend de gestión de productos y carritos! Si tienes alguna pregunta o sugerencia, no dudes en contactarme.
+=======
+Se puede probar el rol de premium con el siguiente usuario y contrasea: premiumCoder@coder.com - premiumCod3r123
+>>>>>>> ca99286acd3bfd3180209ac84bfaeb78cb890ec6
