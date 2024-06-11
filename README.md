@@ -1,6 +1,6 @@
 # Backend de Gestión de Productos y Carritos
 
-Este es un backend simple para la gestión de productos y carritos utilizando Express y el sistema de archivos para persistencia.
+Este es un backend simple para la gestión de productos y carritos utilizando diferentes herramientas aprendidas a lo largo del curso de Desarrollo Backend de Coderhouse
 
 ## Estructura de Archivos
 
