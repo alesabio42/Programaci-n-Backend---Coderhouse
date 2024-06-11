@@ -6,7 +6,12 @@ const router = express.Router();
 const { sendMail } = require('../utils/sendEmail');
 const PurchaseManager = require('../dao/managers/MDB/PurchaseManager');
 const UserController = require('../controllers/user.controller');
+const cartController = require('../controllers/cart.controller');
 const userController = new UserController();
+
+const { configObject } = require('../config/config');
+const Stripe = require('stripe');
+const stripe = Stripe(configObject.stripe_secret_key);
 
 
 const purchaseManager = new PurchaseManager();
@@ -54,7 +59,50 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/create-checkout-session', async (req, res) => {
+  const { userId } = req.body;
 
+  try {
+    // Obtener detalles del carrito del usuario
+    const cartContent = await cartController.getCart(userId);
 
+    // Verificar si el carrito está vacío
+    if (!cartContent || !cartContent.products || cartContent.products.length === 0) {
+      return res.status(400).json({ error: 'El carrito está vacío.' });
+    }
 
+    // Construir line_items para Stripe
+    const lineItems = cartContent.products.map(product => {
+      return {
+        price_data: {
+          currency: 'usd', 
+          product_data: {
+            name: product.productId.title,
+            description: product.productId.description,
+          },
+          unit_amount: Math.round(product.productId.price * 100), // El precio debe ser en centavos
+        },
+        quantity: product.quantity,
+      };
+    });
+
+    console.log('LineItems:', lineItems);
+
+    // Crear la sesión de pago en Stripe
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: 'http://localhost:8080/success', // URL a la que redirigir después del pago exitoso
+      cancel_url: 'http://localhost:8080/cancel', // URL a la que redirigir si se cancela el pago
+    });
+
+    // Redirigir al usuario a la URL de Stripe para completar el pago
+    res.redirect(303, session.url);
+
+  } catch (error) {
+    console.error('Error al crear la sesión de pago:', error.message);
+    res.status(500).json({ error: 'Error al procesar el pago.' });
+  }
+});
 module.exports = router;

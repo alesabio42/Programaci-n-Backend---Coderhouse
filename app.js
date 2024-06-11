@@ -45,6 +45,7 @@ const mockingProductRouter = require('./src/routes/mocking.products');
 const testRouter = require('./src/routes/testRouter'); 
 const productsRouter = require('./src/routes/products.router');
 
+
 //------------------------------GESTOR------------------------------
 const productManager = new ProductManager(productModel);
 
@@ -58,12 +59,13 @@ const io = new ServerIO(server, {
   },
 });
 
+
 //  ------------------------------Middleware para configurar la política de seguridad de contenido ------------------------------
 app.use(
   helmet.contentSecurityPolicy({
     useDefaults: true,
     directives: {
-      "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://cdn.socket.io/"],
+      "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com","https://js.stripe.com/", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://cdn.socket.io/"],
       "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
 
     },
@@ -128,6 +130,8 @@ app.use('/users', usersRouter);
 app.use('/inventario', productRouter);
 
 app.use('/cart', cartRouter);
+
+
 
 app.use('/chat', chatRouter);
 

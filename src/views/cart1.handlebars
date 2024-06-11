@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito de Compras</title>
+  <link rel="stylesheet" href="/css/cart.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <meta name="stripe-public-key" content="{{ stripePublicKey }}">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <a href="/products/products">Volver</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <h1>Carrito de Compras</h1>
+
+  <div class="product-list">
+    {{#if cartContent}}
+      {{#if cartContent.products.length}}
+        {{#each cartContent.products}}
+          <div class="product-item">
+            <!-- Detalles del producto -->
+            <div class="product-image-container">
+              <img src="{{this.productId.thumbnail}}" alt="{{this.productId.title}}" class="product-image">
+            </div>
+            <div class="product-details">
+              <div class="product-header">
+                <h5 class="product-title">{{this.productId.title}}</h5>
+              </div>
+              <ul class="unique-product-details">
+                <li><i class="bi bi-file-text"></i> Descripción: {{this.productId.description}}</li>
+                <li><i class="bi bi-currency-dollar"></i> Precio: ${{this.productId.price}}</li>
+                <!-- Agrega más detalles según sea necesario -->
+              </ul>
+            </div>
+          </div>
+        {{/each}}
+        <div class="cart-total">
+          <p>Total del carrito: ${{cartContent.total}}</p>
+          <!-- Botón de confirmar compra -->
+          <button type="button" id="checkoutButton" class="btn-confirm-purchase">Confirmar Compra</button>
+        </div>
+      {{else}}
+        <p>El carrito está vacío.</p>
+      {{/if}}
+    {{else}}
+      <p>El carrito está vacío.</p>
+    {{/if}}
+  </div>
+
+</main>
+
+<script>
+checkoutButton.addEventListener('click', async () => {
+    try {
+        const userId = '{{ cartContent.userId }}'; // Obtener userId desde la plantilla Handlebars
+        const { value: formValues } = await Swal.fire({
+            title: 'Ingresa los datos de tu tarjeta',
+            html:
+                '<input id="card-holder-name" class="swal2-input" placeholder="Nombre en la tarjeta">' +
+                '<input id="card-number" class="swal2-input" placeholder="Número de tarjeta">' +
+                '<input id="card-expiry" class="swal2-input" placeholder="MM/AA">' +
+                '<input id="card-cvc" class="swal2-input" placeholder="CVC">',
+            focusConfirm: false,
+            preConfirm: () => {
+                return {
+                    cardHolderName: document.getElementById('card-holder-name').value,
+                    cardNumber: document.getElementById('card-number').value,
+                    cardExpiry: document.getElementById('card-expiry').value,
+                    cardCvc: document.getElementById('card-cvc').value
+                };
+            }
+        });
+
+        if (formValues && formValues.cardNumber && formValues.cardExpiry && formValues.cardCvc) {
+            const paymentResponse = await fetch('/payments/payment-intents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    cardHolderName: formValues.cardHolderName,
+                    cardNumber: formValues.cardNumber,
+                    cardExpiry: formValues.cardExpiry,
+                    cardCvc: formValues.cardCvc
+                }),
+            });
+
+            if (paymentResponse.ok) {
+                const result = await paymentResponse.json();
+                const session = await stripe.redirectToCheckout({
+                    sessionId: result.id,
+                });
+
+                if (session.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al iniciar el pago',
+                        text: session.error.message,
+                    });
+                }
+            } else {
+                console.error('Error al crear la sesión de pago:', paymentResponse.statusText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al iniciar el pago',
+                    text: 'Hubo un problema al iniciar el proceso de pago. Por favor, inténtalo de nuevo más tarde.',
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error al iniciar el pago:', error.message);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al iniciar el pago',
+            text: 'Hubo un problema al iniciar el proceso de pago. Por favor, inténtalo de nuevo más tarde.',
+        });
+    }
+});
+
+</script>
+
+</body>
+</html>

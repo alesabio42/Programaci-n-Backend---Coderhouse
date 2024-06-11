@@ -1,117 +1,53 @@
 # Backend de Gestión de Productos y Carritos
 
-Este es un backend simple para la gestión de productos y carritos utilizando diferentes herramientas aprendidas a lo largo del curso de Desarrollo Backend de Coderhouse
-
-## Estructura de Archivos
-
-src
-├── config
-│   ├── passport.config.js
-│
-├── controllers
-│   ├── cart.controller.js
-│   ├── session.controller.js
-│   ├── user.controller.js
-│
-├── Dao
-│   ├── Managers
-│   │   ├── FS (Filesystem)
-│   │   │   ├── CardManager.js
-│   │   │   └── ProductManager.js
-│   │   │
-│   │   │
-│   │   └── MDB (mongodb)
-│   │       ├── CartManager.js
-│   │       └── ProductManager.js
-│   │       └── ChatManager.js
-│   │       └── userManager.js
-│   │
-│   │
-│   ├── Models
-│       ├── carts.model.js
-│       ├── chat.model.js
-│       └── products.model.js
-│       └── ticket.model.js
-│       └── user.model.js
-│
-│
-├── middleware
-│   ├── authentication.middleware.js
-│
-├── public
-│       ├── css
-│         ├── cart.css
-│         ├── home.css
-│         ├── index.css
-│         ├── login.css
-│         ├── products.css
-│         └── realTimeChat.ccs
-│         └── realTimeProducts.ccs
-│         └── users.ccs
-│         └── vistaproducts.ccs
-│
-│       ├── js
-│         ├── buttonHandlers.js
-│         └── home.js
-│         ├── index.js
-│         ├── purchaseScript.js
-│         └── realTimeChat.js
-│         └── realTimeProducts.js
-│         ├── users.js
-│         └── vistaproduct.js
-│
-├── Routes
-│   ├── cart.router.js
-│   ├── chats.js
-│   └── products.js
-│   ├── purchase.js
-│   ├── session.router.js
-│   ├── user.router.js
-│
-└── utils
-│   ├── hashBcrypt.js
-│   ├── jsonwebtoken.js
-│
-│
-└── Views
-│   ├── Layouts
-│   │    └── main.handlebars.js
-│   ├── cart.handlebars     
-│   ├── chat.handlebars 
-│   ├── home.handlebars
-│   ├── index.handlebars
-│   ├── login.handlebars    
-│   ├── products.handlebars 
-│   ├── realTimeProducts.handlebars
-│   ├── register.handlebars    
-│   ├── users.handlebars   
-│   ├── vistaproduct.handlebars 
-
-app.js
-package-lock.json
-package.json
-
+Este proyecto es un backend simple para la gestión de productos y carritos, utilizando diferentes herramientas aprendidas a lo largo del curso de Desarrollo Backend de Coderhouse.
 
 ## Instalación y Ejecución
 
-1. Asegúrate de tener Node.js instalado en tu entorno.
+1. **Requisitos previos**: Asegúrate de tener Node.js instalado en tu entorno.
+   
+2. **Clona el repositorio**: 
 
-2. Clona el repositorio desde GitHub o descarga el conjunto de archivos en una carpeta local.
+3. **Navega a la carpeta del proyecto**: 
 
-3. Abre tu terminal y navega hasta la carpeta donde se encuentran los archivos clonados.
-
-4. Ejecuta el siguiente comando para instalar las dependencias:
+4. **Instala las dependencias**:
     ```bash
     npm install
     ```
-5. Una vez instaladas las dependencias, ejecuta el siguiente comando para iniciar el servidor y ejecutar las pruebas:
+
+5. **Configura las variables de entorno**: Crea dos archivos `.env` con la información proporcionada en este [documento Word](https://docs.google.com/document/d/1Tfme18yPnOxaKkG1zl4G5pROpDpdptf9bv8ZX9Wg7mw/edit?usp=sharing). Coloca los archivos `.env` en la raíz del proyecto.
+
+6. **Inicia el servidor**:
     ```bash
     npm run dev
     ```
 
-## USO: 
-Ingresa en http://localhost:8080/login 
+## Uso
 
-Se puede probar el rol de admin con el siguiente usuario y contrasea: adminCoder@coder.com - adminCod3r123
+1. Accede a la aplicación en: [http://localhost:8080/login](http://localhost:8080/login)
 
-Se puede probar el rol de premium con el siguiente usuario y contrasea: premiumCoder@coder.com - premiumCod3r123
+2. **Roles de usuario**:
+    - **Admin**:
+        - Usuario: `adminCoder@coder.com`
+        - Contraseña: `adminCod3r123`
+    - **Premium**:
+        - Usuario: `premiumCoder@coder.com`
+        - Contraseña: `premiumCod3r123`
+    - **User**:
+        - Inicia sesión registrandote con cualquier otro usuario o a través de GitHub para ingresar como user.
+
+3. **Funcionalidades por rol**:
+    - **User**: 
+        - Acceso a la página de productos.
+        - Ver detalles de los productos.
+        - Agregar productos al carrito.
+        - Confirmar la compra y generar un ticket de venta.
+    - **Admin**:
+        - Acceso al home con opciones adicionales.
+        - Gestión de inventario: agregar, modificar y eliminar productos.
+        - Gestión de usuarios: agregar, modificar y eliminar usuarios.
+
+
+---
+
+¡Gracias por utilizar este backend de gestión de productos y carritos! Si tienes alguna pregunta o sugerencia, no dudes en contactarme.

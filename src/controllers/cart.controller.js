@@ -33,21 +33,13 @@ class CartController {
 
 
 
-    async getCart(req, res) {
+    async getCart(params) {
         try {
-            const user = req.user;
-            const userId = user.id;
-            const cartContent = await cartManager.getCartByUserId(userId);
-    
-            if (cartContent) {
-                res.render('cart', { cartContent });
-            } else {
-                res.status(500).json({ error: 'Error al cargar el carrito.' });
-            }
-    
+            const cartContent = await cartManager.getCartByUserId(params);
+            return cartContent;
         } catch (error) {
-            logger.error(error);
-            res.status(500).json({ error: 'Error al cargar el carrito.' });
+            logger.error('Error al obtener el carrito:', error);
+            throw new Error('Error al obtener el carrito');
         }
     }
 }

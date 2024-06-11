@@ -21,7 +21,9 @@ const configObject = {
   private_key: process.env.PRIVATE_KEY || 'palabrasecretaparatoken',
   persistence: process.env.PERSISTENCE,
   gmail_user: process.env.GMAIL_USER_APP,
-  gmail_pass: process.env.GMAIL_PASS_APP
+  gmail_pass: process.env.GMAIL_PASS_APP,
+  stripe_public_key: process.env.STRIPE_PUBLIC_KEY,
+  stripe_secret_key: process.env.STRIPE_SECRET_KEY
 };
 
 exports.configObject = configObject;

@@ -1,12 +1,10 @@
 // RUTA DE ACCESO: src/routes/products.router.js -- PARA EL CARRITO
 
-// src/routes/productRoutes.js
-
 const express = require('express');
 const { auth } = require('../middleware/authetication.middleware');
 const verifyRole = require('../middleware/verifyRole.middleware');
-const ProductManager = require('../dao/managers/MDB/ProductManager'); // Ajusta la importación según tu estructura
-const logger = require('../utils/logger'); // Ajusta la importación según tu estructura
+const ProductManager = require('../dao/managers/MDB/ProductManager'); 
+const logger = require('../utils/logger');
 
 const roleMiddleware = [auth, verifyRole(['user', 'premium'])];
 const router = express.Router();
