@@ -1,10 +1,34 @@
 # Backend de Gestión de Productos y Carritos
 
-<<<<<<< HEAD
-Este proyecto es un backend simple para la gestión de productos y carritos, utilizando diferentes herramientas aprendidas a lo largo del curso de Desarrollo Backend de Coderhouse.
-=======
 Este es un backend simple para la gestión de productos y carritos utilizando diferentes herramientas aprendidas a lo largo del curso de Desarrollo Backend de Coderhouse
->>>>>>> ca99286acd3bfd3180209ac84bfaeb78cb890ec6
+
+## Instalación y Ejecución
+
+1. Asegúrate de tener Node.js instalado en tu entorno.
+
+2. Clona el repositorio desde GitHub o descarga el conjunto de archivos en una carpeta local.
+
+3. Abre tu terminal y navega hasta la carpeta donde se encuentran los archivos clonados.
+
+4. Ejecuta el siguiente comando para instalar las dependencias:
+    ```bash
+    npm install
+    ```
+5. Una vez instaladas las dependencias, ejecuta el siguiente comando para iniciar el servidor y ejecutar las pruebas:
+    ```bash
+    npm run dev
+    ```
+
+## USO: 
+Ingresa en http://localhost:8080/login 
+
+Se puede probar el rol de admin con el siguiente usuario y contrasea: adminCoder@coder.com - adminCod3r123
+
+Se puede probar el rol de premium con el siguiente usuario y contrasea: premiumCoder@coder.com - premiumCod3r123
+
+# Backend de Gestión de Productos y Carritos
+
+Este proyecto es un backend simple para la gestión de productos y carritos, utilizando diferentes herramientas aprendidas a lo largo del curso de Desarrollo Backend de Coderhouse.
 
 ## Instalación y Ejecución
 
@@ -30,7 +54,6 @@ Este es un backend simple para la gestión de productos y carritos utilizando di
 
 1. Accede a la aplicación en: [http://localhost:8080/login](http://localhost:8080/login)
 
-<<<<<<< HEAD
 2. **Roles de usuario**:
     - **Admin**:
         - Usuario: `adminCoder@coder.com`
@@ -53,9 +76,4 @@ Este es un backend simple para la gestión de productos y carritos utilizando di
         - Gestión de usuarios: agregar, modificar y eliminar usuarios.
 
 
----
-
 ¡Gracias por utilizar este backend de gestión de productos y carritos! Si tienes alguna pregunta o sugerencia, no dudes en contactarme.
-=======
-Se puede probar el rol de premium con el siguiente usuario y contrasea: premiumCoder@coder.com - premiumCod3r123
->>>>>>> ca99286acd3bfd3180209ac84bfaeb78cb890ec6
