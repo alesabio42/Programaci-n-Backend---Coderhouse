@@ -1,59 +1,82 @@
-<!-- realTimeProducts.handlebars -->
-
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real Time Products</title>
-  <link rel="stylesheet" href="/css/realTimeProducts.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.all.min.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Productos</title>
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/products.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
-
 <body>
-  <h1>Lista de Productos en Tiempo Real</h1>
-  <table class="realTimeProducts-table">
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="/">Ir al Home</a>
+
+        <a href="/session/logout" class="logout-button">Logout</a>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <h1>Listado de Productos</h1>
+<table>
     <thead>
-      <tr>
-        <th>Producto</th>
-        <th>Precio</th>
-        <th>Acciones</th>
-      </tr>
+        <tr>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Thumbnail</th>
+            <th>Código</th>
+            <th>Stock</th>
+            <th>Modificar</th>
+            <th>Eliminar</th>
+        </tr>
     </thead>
-        <tbody id="realTimeProductsList">
+    <tbody>
         {{#each products}}
-            <tr>
+        <tr>
             <td>{{this.title}}</td>
+            <td>{{this.category}}</td>
+            <td>{{this.description}}</td>
             <td>{{this.price}}</td>
-            <td><button class="deleteButton" data-product-id="{{this.id}}">Eliminar</button></td>
-            </tr>
-
+            <td>{{this.thumbnail}}</td>
+            <td>{{this.code}}</td>
+            <td>{{this.stock}}</td>
+            <td>{{this.owner}}</td>
+            <td>
+                <button class="edit-btn" data-product-id="{{this._id}}">Modificar</button>
+            </td>
+            <td>
+                <button class="delete-btn" data-product-id="{{this._id}}">Eliminar</button>
+            </td>
+        </tr>
         {{/each}}
-        </tbody>
-  </table>
+    </tbody>
+</table>
 
-  <form id="productForm">
-    <label for="productName">Nombre:</label>
-    <input type="text" id="productName" name="productName" required>
-    <label for="productPrice">Precio:</label>
-    <input type="number" id="productPrice" name="productPrice" required>
-    <label for="productDescription">Descripción:</label>
-    <input type="text" id="productDescription" name="productDescription" required>
-    <label for="productThumbnail">Thumbnail:</label>
-    <input type="text" id="productThumbnail" name="productThumbnail" required>
-    <label for="productCode">Código:</label>
-    <input type="text" id="productCode" name="productCode" required>
-    <label for="productStock">Stock:</label>
-    <input type="number" id="productStock" name="productStock" required>
-    <button type="submit">Agregar Producto</button>
-  </form>
 
-  <button id="btnGoToIndex">Volver a Index</button> 
+        <!-- Paginación -->
+        <ul class="pagination">
+            <nav aria-label="Page navigation example">
+                <li class="page-item prev">
+                    {{#if pagination.hasPrevPage}}
+                        <a href="/realTimeProducts?page={{pagination.prevPage}}&limit={{pagination.limit}}" class="page-link">Anterior</a>
+                    {{/if}}
+                </li>
+                <li class="page-item page-number">Página {{pagination.page}}</li>
+                <li class="page-item next">
+                    {{#if pagination.hasNextPage}}
+                        <a href="/realTimeProducts?page={{pagination.nextPage}}&limit={{pagination.limit}}" class="page-link">Siguiente</a>
+                    {{/if}}
+                </li>
+            </nav>
+        </ul>
 
-  <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
-  <script src="/js/realTimeProducts.js"></script>
+        <button id="add-product-btn">Agregar Producto</button>
+    </div>
+
+    <script src="/js/inventario.js"></script>
 </body>
-
 </html>

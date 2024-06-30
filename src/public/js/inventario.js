@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Enviar solicitud de eliminación al servidor
-                    fetch(`/inventario/${productId}`, { method: 'DELETE' })
+                    fetch(`/realTimeProducts/${productId}`, { method: 'DELETE' })
                         .then(response => {
                             if (response.ok) {
                                 // Recargar la página después de eliminar el producto
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const modifiedStock = Swal.getPopup().querySelector('#stock').value;
 
                     // Enviar datos modificados al servidor
-                    return fetch(`/inventario/${productId}`, {
+                    return fetch(`/realTimeProducts/${productId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const stock = Swal.getPopup().querySelector('#stock').value;
 
                 // Enviar datos al servidor
-                return fetch('/inventario', {
+                return fetch('/realTimeProducts', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

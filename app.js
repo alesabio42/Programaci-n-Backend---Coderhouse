@@ -127,7 +127,7 @@ app.get('/', authTokenMiddleware, (req, res) => {
 
 app.use('/users', usersRouter);
 
-app.use('/inventario', productRouter);
+app.use('/realTimeProducts', productRouter);
 
 app.use('/cart', cartRouter);
 
@@ -143,17 +143,6 @@ app.use('/mockingproducts', mockingProductRouter);
 app.use('/loggerTest', loggerTestRoutes);
 
 app.use(handleErrors);
-
-//-----------------------------PARA BORRAR---------------------------------
-app.get('/home', (req, res) => {
-  res.render('home', { products: productManager.products });
-});
-
-app.get('/realTimeProducts', (req, res) => {
-  res.render('realTimeProducts', { products: productManager.products });
-});
-//-----------------------------PARA BORRAR---------------------------------
-
 
 app.use('/products', productsRouter);
 

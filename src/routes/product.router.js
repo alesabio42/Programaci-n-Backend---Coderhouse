@@ -15,7 +15,7 @@ router.get('/', roleMiddleware, async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const { products, hasPrevPage, hasNextPage, prevPage, nextPage } = await productController.getProducts(page);
         const pagination = { hasPrevPage, hasNextPage, prevPage, nextPage, page };
-        res.render('inventario', { products, pagination });
+        res.render('realTimeProducts', { products, pagination });
     } catch (error) {
         console.error('Error al obtener los datos de los productos:', error);
         res.status(500).send('Error interno del servidor');
