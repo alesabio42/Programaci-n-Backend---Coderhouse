@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const category = row.cells[1].innerText;
             const description = row.cells[2].innerText;
             const price = row.cells[3].innerText;
-            const thumbnail = row.cells[4].innerText;
+            const thumbnail = row.cells[4].querySelector('img').getAttribute('src');
             const code = row.cells[5].innerText;
             const stock = row.cells[6].innerText;
 

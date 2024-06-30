@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Productos</title>
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/products.css">
+    <link rel="stylesheet" href="/css/realTimeProducts.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
@@ -30,6 +30,7 @@
             <th>Thumbnail</th>
             <th>Código</th>
             <th>Stock</th>
+            <th>Creador del producto</th>
             <th>Modificar</th>
             <th>Eliminar</th>
         </tr>
@@ -41,7 +42,12 @@
             <td>{{this.category}}</td>
             <td>{{this.description}}</td>
             <td>{{this.price}}</td>
-            <td>{{this.thumbnail}}</td>
+            <td>
+            <div class="product-image-container">
+                <img src="{{this.thumbnail}}" alt="{{this.title}}" class="product-image">
+            </div>
+            </td>
+            
             <td>{{this.code}}</td>
             <td>{{this.stock}}</td>
             <td>{{this.owner}}</td>
