@@ -14,8 +14,13 @@ Este proyecto es un backend simple para la gestión de productos y carritos, uti
     ```bash
     npm install
     ```
+    
+5. **Configuración de variables de entorno**:
+Crea **dos archivos** en la **raíz del proyecto** (no dentro de carpetas):
+- `.env.production`
+- `.env.development`
 
-5. **Configura las variables de entorno**: Crea dos archivos `.env` con la información proporcionada en este [documento Word](https://docs.google.com/document/d/1Tfme18yPnOxaKkG1zl4G5pROpDpdptf9bv8ZX9Wg7mw/edit?usp=sharing). Coloca los archivos `.env` en la raíz del proyecto.
+Copiá los valores reales desde el archivo: CONFIGURACION_ENV.md
 
 6. **Inicia el servidor**:
     ```bash
@@ -53,3 +58,10 @@ Este proyecto es un backend simple para la gestión de productos y carritos, uti
 
 
 ¡Gracias por utilizar este backend de gestión de productos y carritos! Si tienes alguna pregunta o sugerencia, no dudes en contactarme.
+
+---
+
+## 📚 Documentación
+- Material y referencias del curso: https://drive.google.com/drive/u/0/folders/1syduncQ5-5Z0TUmiLHnurWUVlDlaZYFb
+
+---
