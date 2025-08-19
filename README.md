@@ -23,10 +23,13 @@ Crea **dos archivos** en la **raíz del proyecto** (no dentro de carpetas):
 Copiá los valores reales desde el archivo: CONFIGURACION_ENV.md
 
 6. **Inicia el servidor**:
-    ```bash
-    npm run dev
-    ```
-
+   ```bash
+   # Desarrollo
+   npm run dev
+   
+   # Producción
+   npm start
+   ```
 ## Uso
 
 1. Accede a la aplicación en: [http://localhost:8080/login](http://localhost:8080/login)
